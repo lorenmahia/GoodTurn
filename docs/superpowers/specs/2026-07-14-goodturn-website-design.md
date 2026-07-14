@@ -87,8 +87,9 @@ Dual-role accounts: "Jobs I Posted" = jobs with posterId = me;
 
 | Route | Behavior |
 |---|---|
-| `POST /api/auth/*` | Auth.js signup/login/logout. |
-| `GET /api/jobs` | Search: `q`, `category`, `minPrice`, `maxPrice`, `sort`. Open jobs only by default. |
+| `POST /api/signup` | Create account (email, password, displayName); bcrypt hash; then client signs in via Auth.js. |
+| `POST /api/auth/*` | Auth.js login/logout/session (credentials provider). |
+| `GET /api/jobs` | Search: `q`, `category`, `minPrice`, `maxPrice`, `sort` (`newest` default, `price-asc`, `price-desc`). Open jobs only by default. |
 | `POST /api/jobs` | Create job; enforce category price minimum. |
 | `GET /api/jobs/[id]` | Detail; include applications only for the poster. |
 | `POST /api/jobs/[id]/apply` | Apply with cover note. Reject if poster = applicant, duplicate, or job not OPEN. |
