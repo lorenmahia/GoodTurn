@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { applySchema } from "@/lib/validation";
@@ -30,8 +31,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ error: "You have already applied to this job" }, { status: 400 });
   }
 
-  const application = await prisma.application.create({
-    data: { jobId: id, applicantId: session.user.id, coverNote: parsed.data.coverNote },
-  });
-  return NextResponse.json({ application }, { status: 201 });
+  try {
+    const application = await prisma.application.create({
+      data: { jobId: id, applicantId: session.user.id, coverNote: parsed.data.coverNote },
+    });
+    return NextResponse.json({ application }, { status: 201 });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return NextResponse.json({ error: "You have already applied to this job" }, { status: 400 });
+    }
+    throw error;
+  }
 }
