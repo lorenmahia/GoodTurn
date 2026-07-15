@@ -5,6 +5,8 @@ import {
   applicationPatchSchema,
   jobQuerySchema,
   contactSchema,
+  applySchema,
+  profilePatchSchema,
 } from "@/lib/validation";
 
 describe("signupSchema", () => {
@@ -51,5 +53,35 @@ describe("contactSchema", () => {
   it("requires a real message", () => {
     expect(contactSchema.safeParse({ name: "Jo", email: "jo@x.com", message: "Hello, I need help." }).success).toBe(true);
     expect(contactSchema.safeParse({ name: "Jo", email: "jo@x.com", message: "hi" }).success).toBe(false);
+  });
+});
+
+describe("applySchema", () => {
+  it("accepts a valid coverNote", () => {
+    expect(applySchema.safeParse({ coverNote: "I would love to help with this project." }).success).toBe(true);
+  });
+  it("rejects a too-short coverNote", () => {
+    expect(applySchema.safeParse({ coverNote: "hi" }).success).toBe(false);
+  });
+  it("rejects a coverNote over 2000 chars", () => {
+    expect(applySchema.safeParse({ coverNote: "x".repeat(2001) }).success).toBe(false);
+  });
+});
+
+describe("profilePatchSchema", () => {
+  it("accepts an empty object", () => {
+    expect(profilePatchSchema.safeParse({}).success).toBe(true);
+  });
+  it("accepts a full valid patch", () => {
+    expect(profilePatchSchema.safeParse({ displayName: "Alice", bio: "Writer", skills: "writing, editing", hourlyRate: 12 }).success).toBe(true);
+  });
+  it("rejects negative hourlyRate", () => {
+    expect(profilePatchSchema.safeParse({ hourlyRate: -1 }).success).toBe(false);
+  });
+  it("rejects displayName below 2-char min", () => {
+    expect(profilePatchSchema.safeParse({ displayName: "A" }).success).toBe(false);
+  });
+  it("rejects skills over 500 chars", () => {
+    expect(profilePatchSchema.safeParse({ skills: "x".repeat(501) }).success).toBe(false);
   });
 });
