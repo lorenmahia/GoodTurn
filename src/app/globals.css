@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #3b4a8c;
+  --color-accent: #7b6fd0;
+  --color-charcoal: #2e2e2e;
+  --color-ink: #0a0a0f;
+}
+
+body {
+  @apply bg-white text-neutral-900 antialiased;
+}
