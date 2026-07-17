@@ -1,7 +1,7 @@
 # Goodturn Homepage Redesign — Design Spec
 
 Date: 2026-07-16
-Status: Draft — awaiting user approval
+Status: Approved by user (2026-07-16)
 Supersedes: the `/` row of `docs/superpowers/specs/2026-07-14-goodturn-website-design.md`
 
 ## Overview
@@ -159,10 +159,13 @@ const [openJobs, categories, members] = await Promise.all([
 ]);
 ```
 
-Rendered as: **Open jobs**, **Skill categories**, **Members**. Note the
-third is deliberately *Members*, not *Freelancers* — `User` has no
-client/freelancer split (anyone can post or apply), so labelling the count
-"freelancers" would be a claim the data does not support. Three
+Rendered as: **Open jobs**, **Skill categories**, **Members**. The third is
+*Members*, not *Freelancers* — confirmed by the user, and correct on the
+data besides: `User` has no client/freelancer split (anyone can post or
+apply), so labelling that count "freelancers" would be a claim the schema
+does not support. The word "freelancer" is still used freely in prose and
+headings, where it is accurate; it is only barred as a label on this count.
+Three
 non-numeric value tiles sit alongside: "You set the price", "AI-matched
 applicants", "Global payments — Visa, Mastercard, PayPal, Mpesa, crypto".
 
@@ -307,6 +310,20 @@ Verification instead:
   variants), only the hero eager, and per-file size budgets.
 - **Long page hurting the CTA.** Mitigated by Post a Job appearing three
   times: hero, clients section, final band.
+
+## Delivery
+
+Work happens on a local `homepage-redesign` branch off `master`, never on
+`master` directly.
+
+There is **no GitHub remote** — the repo is local-only, and `gh` is not
+installed (nor is `winget`). By user decision, GitHub is deferred: the
+branch is reviewed locally. Commits are therefore kept PR-shaped (one
+logical step each, per the work plan below) so the branch can be pushed and
+opened as a pull request later with no rewriting. When that happens, the
+route is: create an empty private repo → `git remote add origin` →
+`git push` (Git Credential Manager is already configured and will handle
+auth) → open the GitHub compare URL in a browser.
 
 ## Work plan
 
