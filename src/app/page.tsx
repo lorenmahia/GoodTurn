@@ -1,31 +1,10 @@
 import Link from "next/link";
 import ComingSoon from "@/components/ComingSoon";
+import { prisma } from "@/lib/db";
+import HeroSection from "@/components/home/HeroSection";
+import StatsBand from "@/components/home/StatsBand";
 
-function MountainHero() {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#16324f] via-[#1d2a44] to-charcoal text-white">
-      <svg viewBox="0 0 1440 320" className="absolute bottom-0 left-0 w-full opacity-30" preserveAspectRatio="none" aria-hidden>
-        <path fill="#0b1526" d="M0 320 320 96l224 160L768 64l288 192 176-128 208 160v32H0Z" />
-        <path fill="#10203a" d="m0 320 256-128 192 96 256-192 320 224 224-160 192 160H0Z" />
-      </svg>
-      <div className="relative mx-auto max-w-6xl px-4 py-24 sm:py-32">
-        <p className="font-semibold">We Connect</p>
-        <h1 className="mt-6 max-w-4xl text-4xl font-extrabold leading-tight sm:text-6xl">
-          Freelancers, Businesses and Industry Experts
-        </h1>
-        <p className="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-200">
-          Through our three core businesses, Goodturn Jobs, Goodturn Connect and Goodturn Learn, users can
-          easily <strong>Find jobs</strong> online, Individuals and businesses can <strong>Post work</strong>,
-          users can <strong>Connect</strong> with the clients and businesses they are working with, and these
-          users are able to obtain skills necessary to find better jobs through Goodturn <strong>Learn.</strong>
-        </p>
-        <Link href="/contact" className="mt-10 inline-block rounded-lg bg-brand px-8 py-3 font-medium tracking-wide hover:bg-accent">
-          Contact us
-        </Link>
-      </div>
-    </section>
-  );
-}
+export const revalidate = 3600;
 
 function JobsSection() {
   return (
@@ -166,10 +145,17 @@ function ConnectSection() {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [openJobs, categories, members] = await Promise.all([
+    prisma.job.count({ where: { status: "OPEN" } }),
+    prisma.category.count(),
+    prisma.user.count(),
+  ]);
+
   return (
     <>
-      <MountainHero />
+      <HeroSection />
+      <StatsBand openJobs={openJobs} categories={categories} members={members} />
       <JobsSection />
       <LearnSection />
       <ConnectSection />
