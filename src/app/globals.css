@@ -10,3 +10,58 @@
 body {
   @apply bg-white text-neutral-900 antialiased;
 }
+
+/* ---------- Scroll reveal ----------
+   Hidden states key off [data-revealed="false"], which only the client sets.
+   Server-rendered markup has no data-revealed attribute, so it renders
+   VISIBLE — a no-JS visitor gets the full page, not a blank one. */
+
+[data-reveal] {
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal][data-revealed="false"] {
+  opacity: 0;
+}
+
+[data-reveal="fade-up"][data-revealed="false"] {
+  transform: translateY(28px);
+}
+
+[data-reveal="tilt"][data-revealed="false"] {
+  transform: perspective(1000px) rotateX(12deg) translateZ(-60px);
+}
+
+[data-reveal="left"][data-revealed="false"] {
+  transform: translateX(-48px) rotateY(6deg);
+}
+
+[data-reveal="right"][data-revealed="false"] {
+  transform: translateX(48px) rotateY(-6deg);
+}
+
+[data-reveal="zoom"][data-revealed="false"] {
+  transform: scale(1.08);
+}
+
+[data-reveal][data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Reduced motion ----------
+   Force the settled state and kill every transition. ParallaxLayer and
+   CountUp check the same query in JS and skip their listeners entirely. */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none !important;
+  }
+
+  [data-reveal][data-revealed="false"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
