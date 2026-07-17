@@ -3,6 +3,8 @@ import ComingSoon from "@/components/ComingSoon";
 import { prisma } from "@/lib/db";
 import HeroSection from "@/components/home/HeroSection";
 import StatsBand from "@/components/home/StatsBand";
+import ForClientsSection from "@/components/home/ForClientsSection";
+import HowItWorksStrip from "@/components/home/HowItWorksStrip";
 
 export const revalidate = 3600;
 
@@ -156,6 +158,8 @@ export default async function HomePage() {
     <>
       <HeroSection />
       <StatsBand openJobs={openJobs} categories={categories} members={members} />
+      <ForClientsSection />
+      <HowItWorksStrip />
       <JobsSection />
       <LearnSection />
       <ConnectSection />
