@@ -5,70 +5,9 @@ import HeroSection from "@/components/home/HeroSection";
 import StatsBand from "@/components/home/StatsBand";
 import ForClientsSection from "@/components/home/ForClientsSection";
 import HowItWorksStrip from "@/components/home/HowItWorksStrip";
+import ForFreelancersSection from "@/components/home/ForFreelancersSection";
 
 export const revalidate = 3600;
-
-function JobsSection() {
-  return (
-    <section className="mx-auto max-w-6xl px-4 py-20">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <h2 className="text-4xl font-extrabold">Goodturn Jobs</h2>
-        <div className="flex flex-col gap-3">
-          <Link href="/post-a-job" className="rounded bg-ink px-6 py-3 text-center font-medium text-white hover:bg-neutral-700">Post a Job</Link>
-          <Link href="/how-it-works" className="rounded bg-accent px-6 py-3 text-center font-medium text-white hover:opacity-90">How it Works</Link>
-        </div>
-      </div>
-
-      <h3 className="mt-6 text-2xl font-bold text-brand">To Clients</h3>
-      <div className="mt-6 grid gap-10 md:grid-cols-2">
-        <div className="space-y-8">
-          <div>
-            <h4 className="text-xl font-bold text-brand">Large and High Quality Freelancer Skillset</h4>
-            <p className="mt-2 leading-relaxed text-neutral-700">
-              Our freelancers are highly skilled in a wide variety of skillsets that enables almost any work
-              that can be done online to be made possible. We also provide in-app specialists to help
-              freelancers thus increasing the quality of the work output. Our freelancer learn with us
-              program also ensures that freelancers are ready for any challenges in relation to your job
-              description.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-xl font-bold text-brand">High Quality Work</h4>
-            <p className="mt-2 leading-relaxed text-neutral-700">
-              Our platform screens freelancers based on their educational background, skill set and matches
-              them to your job posting through our artificial intelligence system to ensure you get the best
-              match possible. Users are encouraged to learn constantly and acquire new certificates which
-              boosts their ranking.
-            </p>
-          </div>
-        </div>
-        <div className="rounded-xl bg-ink p-8 text-white">
-          <h4 className="text-xl font-bold">You Set the Price</h4>
-          <p className="mt-3 leading-relaxed text-neutral-300">
-            You are responsible for setting your own price for the Job. However, for each category, depending
-            on the number of hours estimated for the job and job complexity, there is a minimum amount
-            required in order to encourage freelancers to apply for your Job.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-16 flex flex-wrap items-start justify-between gap-6">
-        <h3 className="text-2xl font-bold text-brand">To Freelancers</h3>
-        <div className="flex flex-col gap-3">
-          <Link href="/find-work" className="rounded bg-ink px-6 py-3 text-center font-medium text-white hover:bg-neutral-700">Find Work</Link>
-          <Link href="/how-it-works" className="rounded bg-accent px-6 py-3 text-center font-medium text-white hover:opacity-90">How it Works</Link>
-        </div>
-      </div>
-      <div className="mt-6 max-w-xl">
-        <h4 className="text-xl font-bold text-brand">Fast Payment System</h4>
-        <p className="mt-2 leading-relaxed text-neutral-700">
-          We accept Visa, Mastercard, PayPal, Mpesa and all Crypto Wallets ensuring that your mode of payment
-          is available globally. In addition, our secure checkout system guarantees your money&apos;s safety.
-        </p>
-      </div>
-    </section>
-  );
-}
 
 function LearnSection() {
   return (
@@ -160,7 +99,7 @@ export default async function HomePage() {
       <StatsBand openJobs={openJobs} categories={categories} members={members} />
       <ForClientsSection />
       <HowItWorksStrip />
-      <JobsSection />
+      <ForFreelancersSection />
       <LearnSection />
       <ConnectSection />
     </>
