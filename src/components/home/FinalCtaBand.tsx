@@ -6,7 +6,9 @@ import Reveal from "@/components/motion/Reveal";
 export default function FinalCtaBand() {
   return (
     <section className="relative overflow-hidden bg-ink text-white">
-      <ParallaxLayer speed={0.7} className="absolute inset-x-0 top-0 h-[130%]">
+      {/* bottom-0 puts the 30% overflow ABOVE the frame: the layer drifts
+          downward as the band scrolls in, so the coverage must be up top. */}
+      <ParallaxLayer speed={0.7} className="absolute inset-x-0 bottom-0 h-[130%]">
         <Image
           src="/images/home/cta.jpg"
           alt=""

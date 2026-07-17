@@ -12,7 +12,13 @@ export type ParallaxLayerProps = {
   className?: string;
 };
 
-type Layer = { el: HTMLElement; speed: number };
+type Layer = {
+  el: HTMLElement;
+  speed: number;
+  anchor: number;
+  sectionTop: number;
+  overflowAbove: number;
+};
 
 const layers = new Set<Layer>();
 let listening = false;
@@ -21,8 +27,20 @@ let ticking = false;
 function paint() {
   ticking = false;
   const y = window.scrollY;
-  for (const { el, speed } of layers) {
-    el.style.transform = `translate3d(0, ${(y * (1 - speed)).toFixed(2)}px, 0)`;
+  for (const { el, speed, anchor, sectionTop, overflowAbove } of layers) {
+    // Progress is measured from when the layer's section enters the viewport,
+    // not from absolute scrollY — a layer deep in the page must sit at its CSS
+    // position until its section approaches, or it gets translated thousands
+    // of pixels away and (being lazy-loaded) never even loads.
+    const raw = Math.max(0, y - anchor) * (1 - speed);
+    // A layer may drift down only as far as its overflow above the frame plus
+    // the part of its section already scrolled off-screen (uncoverable area
+    // there is invisible). Without the cap, any content below the section —
+    // like the footer — extends the scroll range past what the overflow covers
+    // and a bare sliver appears at the section's top edge.
+    const allowance = overflowAbove + Math.max(0, y - sectionTop);
+    const offset = Math.min(raw, allowance);
+    el.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
   }
 }
 
@@ -61,7 +79,17 @@ export default function ParallaxLayer({
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const layer: Layer = { el, speed };
+    // Anchor on the containing section (the nearest positioned ancestor), so
+    // every layer of a section shares one origin. max(0, …) keeps sections in
+    // the first viewport — the hero — anchored at the very top of the page.
+    const section = (el.offsetParent as HTMLElement | null) ?? el;
+    const sectionRect = section.getBoundingClientRect();
+    const layerRect = el.getBoundingClientRect();
+    const sectionTop = sectionRect.top + window.scrollY;
+    const anchor = Math.max(0, sectionTop - window.innerHeight);
+    const overflowAbove = Math.max(0, sectionRect.top - layerRect.top);
+
+    const layer: Layer = { el, speed, anchor, sectionTop, overflowAbove };
     subscribe(layer);
     return () => unsubscribe(layer);
   }, [speed]);
