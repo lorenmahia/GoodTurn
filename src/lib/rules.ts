@@ -22,3 +22,14 @@ const ALLOWED_TRANSITIONS: Record<ApplicationStatus, readonly ApplicationStatus[
 export function canTransition(from: ApplicationStatus, to: ApplicationStatus): boolean {
   return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }
+
+export function median(values: number[]): number | null {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+export function suggestedTotal(hourlyRate: number, estimatedHours: number): number {
+  return Math.round(hourlyRate * estimatedHours * 100) / 100;
+}
