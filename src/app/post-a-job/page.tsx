@@ -9,7 +9,7 @@ export default async function PostAJobPage() {
 
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
-    select: { id: true, name: true, minHourlyRate: true },
+    select: { id: true, name: true, typicalHourlyRate: true },
   });
 
   return (

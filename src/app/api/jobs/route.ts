@@ -30,8 +30,8 @@ export async function POST(req: Request) {
   }
 
   const { price, estimatedHours } = parsed.data;
-  if (!isPriceAllowed(price, category.minHourlyRate, estimatedHours)) {
-    const min = minimumPrice(category.minHourlyRate, estimatedHours);
+  if (!isPriceAllowed(price, category.typicalHourlyRate, estimatedHours)) {
+    const min = minimumPrice(category.typicalHourlyRate, estimatedHours);
     return NextResponse.json(
       { error: { price: [`The minimum for ${category.name} at ${estimatedHours} hours is $${min}`] } },
       { status: 400 }
