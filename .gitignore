@@ -51,3 +51,7 @@ sample_webpage_recording.mp4
 
 # local claude settings
 .claude/
+
+# internal planning docs and market research (kept local, not published)
+/docs/
+Kenya_Freelance_Pricing_Report.docx
