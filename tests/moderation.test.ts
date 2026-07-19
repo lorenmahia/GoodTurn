@@ -10,6 +10,7 @@ describe("findContactInfo — positives", () => {
   it("flags spelled-out emails", () => {
     expect(kinds("jane at gmail dot com")).toContain("email");
     expect(kinds("jane(at)yahoo(dot)co(dot)ke")).toContain("email");
+    expect(kinds("reach me: john at outlook dot com")).toContain("email");
   });
   it("flags Kenyan mobile numbers", () => {
     expect(kinds("call 0712 345 678")).toContain("phone");
@@ -24,6 +25,7 @@ describe("findContactInfo — positives", () => {
     expect(kinds("visit www.janedesigns.co.ke")).toContain("url");
     expect(kinds("mysite.co.ke has samples")).toContain("url");
     expect(kinds("wa.me/254712345678")).toContain("url");
+    expect(kinds("mysite.net has my portfolio")).toContain("url");
   });
   it("flags messenger handles near platform names", () => {
     expect(kinds("find me on telegram @janedoe")).toContain("url");
@@ -41,6 +43,11 @@ describe("findContactInfo — negatives (must NOT flag)", () => {
     "Available 9 to 5, Monday to Friday",
     "My rate is KSh 750.50 per hour",
     "Since 2019 I have completed 47 projects",
+    "I know ASP.NET and C#",
+    "5 years of VB.NET experience",
+    ".NET developer",
+    "meet me at the dot org near the mall",
+    "aim at high dot accuracy targets please",
   ];
   for (const text of clean) {
     it(`passes: "${text}"`, () => {
