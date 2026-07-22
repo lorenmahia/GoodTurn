@@ -35,8 +35,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Resume must be a PDF" }, { status: 400 });
   }
 
+  const rawName = (file.name || "resume.pdf").replace(/[^\w. -]/g, "_").slice(0, 100);
+
   const resume = await prisma.resume.create({
-    data: { ownerId: session.user.id, fileName: file.name || "resume.pdf", data: bytes },
+    data: { ownerId: session.user.id, fileName: rawName, data: bytes },
     select: { id: true, fileName: true },
   });
   return NextResponse.json({ resume }, { status: 201 });
