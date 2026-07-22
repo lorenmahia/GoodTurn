@@ -20,13 +20,22 @@ describe("signupSchema", () => {
 });
 
 describe("jobCreateSchema", () => {
-  const valid = { title: "Build a site", description: "A description with more than twenty characters.", categoryId: "c1", estimatedHours: 10, price: 150 };
-  it("accepts a valid job", () => {
-    expect(jobCreateSchema.safeParse(valid).success).toBe(true);
+  const base = { title: "Design a logo", description: "A modern logo for a Nairobi bakery, three concepts.", categoryId: "c1", estimatedHours: 10 };
+  it("accepts a FIXED job with a price", () => {
+    expect(jobCreateSchema.safeParse({ ...base, paymentType: "FIXED", price: 8000 }).success).toBe(true);
   });
-  it("rejects zero hours and zero price", () => {
-    expect(jobCreateSchema.safeParse({ ...valid, estimatedHours: 0 }).success).toBe(false);
-    expect(jobCreateSchema.safeParse({ ...valid, price: 0 }).success).toBe(false);
+  it("accepts an HOURLY job with a rate", () => {
+    expect(jobCreateSchema.safeParse({ ...base, paymentType: "HOURLY", hourlyRate: 800 }).success).toBe(true);
+  });
+  it("rejects FIXED without price and HOURLY without rate", () => {
+    expect(jobCreateSchema.safeParse({ ...base, paymentType: "FIXED" }).success).toBe(false);
+    expect(jobCreateSchema.safeParse({ ...base, paymentType: "HOURLY" }).success).toBe(false);
+  });
+  it("accepts any positive price — no floor", () => {
+    expect(jobCreateSchema.safeParse({ ...base, paymentType: "FIXED", price: 1 }).success).toBe(true);
+  });
+  it("rejects a short title", () => {
+    expect(jobCreateSchema.safeParse({ ...base, title: "Hi", paymentType: "FIXED", price: 8000 }).success).toBe(false);
   });
 });
 
@@ -57,14 +66,18 @@ describe("contactSchema", () => {
 });
 
 describe("applySchema", () => {
-  it("accepts a valid coverNote", () => {
-    expect(applySchema.safeParse({ coverNote: "I would love to help with this project." }).success).toBe(true);
+  const base = { name: "Brian Otieno", location: "Nairobi", coverNote: "I have designed 30+ logos for local businesses." };
+  it("accepts a complete application without a resume", () => {
+    expect(applySchema.safeParse(base).success).toBe(true);
   });
-  it("rejects a too-short coverNote", () => {
-    expect(applySchema.safeParse({ coverNote: "hi" }).success).toBe(false);
+  it("accepts an application with a resumeId", () => {
+    expect(applySchema.safeParse({ ...base, resumeId: "r1" }).success).toBe(true);
   });
-  it("rejects a coverNote over 2000 chars", () => {
-    expect(applySchema.safeParse({ coverNote: "x".repeat(2001) }).success).toBe(false);
+  it("rejects a short pitch", () => {
+    expect(applySchema.safeParse({ ...base, coverNote: "hi" }).success).toBe(false);
+  });
+  it("rejects a missing location", () => {
+    expect(applySchema.safeParse({ name: base.name, coverNote: base.coverNote }).success).toBe(false);
   });
 });
 
