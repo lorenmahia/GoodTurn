@@ -19,22 +19,22 @@ export default function Navbar({ userName }: { userName: string | null }) {
 
   const authControls = userName ? (
     <>
-      <Link href="/account" className="text-sm text-neutral-300 hover:text-white">Hi, {userName}</Link>
+      <Link href="/account" className="text-sm text-neutral-300 hover:text-white dark:text-neutral-400 dark:hover:text-white">Hi, {userName}</Link>
       <button
         onClick={() => signOut({ callbackUrl: "/" })}
-        className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-white hover:opacity-90"
+        className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-white transition hover:opacity-90"
       >
         Log out
       </button>
     </>
   ) : (
-    <Link href="/login" className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-white hover:opacity-90">
+    <Link href="/login" className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-white transition hover:opacity-90">
       Sign up/Log in
     </Link>
   );
 
   return (
-    <header className="sticky top-0 z-40 bg-charcoal text-white shadow">
+    <header className="sticky top-0 z-40 bg-charcoal text-white shadow dark:border-b dark:border-white/10">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
           <Logo />
@@ -42,7 +42,7 @@ export default function Navbar({ userName }: { userName: string | null }) {
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className="text-sm hover:text-accent">
+            <Link key={l.href} href={l.href} className="text-sm text-neutral-200 transition hover:text-accent dark:text-neutral-300 dark:hover:text-accent">
               {l.label}
             </Link>
           ))}
@@ -55,10 +55,10 @@ export default function Navbar({ userName }: { userName: string | null }) {
         </button>
       </div>
       {open && (
-        <nav className="space-y-1 border-t border-neutral-700 px-4 pb-4 pt-2 md:hidden">
+        <nav className="space-y-1 border-t border-neutral-700 px-4 pb-4 pt-2 md:hidden dark:border-white/10">
           <div className="px-2 py-2"><ThemeToggle /></div>
           {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="block rounded px-2 py-2 hover:bg-neutral-700">
+            <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="block rounded px-2 py-2 transition hover:bg-neutral-700 dark:hover:bg-white/10">
               {l.label}
             </Link>
           ))}

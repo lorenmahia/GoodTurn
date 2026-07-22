@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatKES } from "@/lib/currency";
 
 export default function BalanceCard({ balance }: { balance: number }) {
   const [visible, setVisible] = useState(false);
@@ -8,7 +9,7 @@ export default function BalanceCard({ balance }: { balance: number }) {
     <div className="flex items-center gap-3">
       <span className="text-lg">
         Account Balance:{" "}
-        <strong>{visible ? `$${balance.toFixed(2)}` : "$ ••••"}</strong>
+        <strong>{visible ? formatKES(balance) : "KSh ••••"}</strong>
       </span>
       <button
         onClick={() => setVisible(!visible)}
