@@ -58,19 +58,26 @@ const PHONE_CANDIDATE = /\+?\d(?:[\s\-().]{0,3}\d){6,}/g;
 const URL_EXPLICIT = /\b(?:https?:\/\/|www\.)[^\s,;]+/gi;
 
 // Bare domains on common TLDs. ".js" style tech names are not in the TLD
-// list, so "Node.js" never matches. ".NET"/".COM" style acronym tech names
-// (ASP.NET, VB.NET) DO share a listed TLD, so a bare-domain match is treated
-// as a tech term (not a url) when its TLD segment is written in uppercase
-// and there's no path — see isTechTermNotUrl.
-// Capture groups: 1=tld, 2=path.
+// list, so "Node.js" never matches. ".NET" style acronym tech names
+// (ASP.NET, VB.NET) DO share a listed TLD ("net"), so a bare-domain match is
+// treated as a tech term (not a url) only when the label before the dot is
+// itself one of a short, known language/framework acronym (asp, vb) AND the
+// TLD is "net" — NOT based on casing (a real domain like JANE.COM or
+// HIREME.IO must still flag regardless of how it's cased). See
+// isTechTermNotUrl.
+// Capture groups: 1=domain label, 2=tld, 3=path.
 const URL_BARE =
-  /\b[a-z0-9-]{2,}\.(com|net|org|io|co(?:\.[a-z]{2})?|ke|me|app|dev|info|biz|xyz|link)(\/[^\s,;]*)?\b/gi;
+  /\b([a-z0-9-]{2,})\.(com|net|org|io|co(?:\.[a-z]{2})?|ke|me|app|dev|info|biz|xyz|link)(\/[^\s,;]*)?\b/gi;
+
+const TECH_ACRONYM_DOMAIN_LABELS = new Set(["asp", "vb"]);
 
 function isTechTermNotUrl(m: RegExpMatchArray): boolean {
-  const tld = m[1];
-  const path = m[2];
+  const domainLabel = m[1];
+  const tld = m[2];
+  const path = m[3];
   if (path) return false;
-  return tld.length > 0 && tld === tld.toUpperCase() && tld !== tld.toLowerCase();
+  if (tld.toLowerCase() !== "net") return false;
+  return TECH_ACRONYM_DOMAIN_LABELS.has(domainLabel.toLowerCase());
 }
 
 // A platform name with an @handle nearby.

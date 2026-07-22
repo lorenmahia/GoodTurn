@@ -27,6 +27,15 @@ describe("findContactInfo — positives", () => {
     expect(kinds("wa.me/254712345678")).toContain("url");
     expect(kinds("mysite.net has my portfolio")).toContain("url");
   });
+  it("flags all-caps bare domains regardless of casing", () => {
+    expect(kinds("MYSITE.COM")).toContain("url");
+    expect(kinds("mysite.COM")).toContain("url");
+    expect(kinds("contact me at MYSITE.COM for samples")).toContain("url");
+    expect(kinds("check out JANEDESIGNS.CO.KE")).toContain("url");
+    expect(kinds("email me at JANE.COM")).toContain("url");
+    expect(kinds("reach me at HIREME.IO")).toContain("url");
+    expect(kinds("portfolio: JANEDESIGNS.NET")).toContain("url");
+  });
   it("flags messenger handles near platform names", () => {
     expect(kinds("find me on telegram @janedoe")).toContain("url");
     expect(kinds("WhatsApp me on 0712345678")).toContain("phone");
