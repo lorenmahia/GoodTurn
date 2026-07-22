@@ -1,27 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { minimumPrice, isPriceAllowed, canTransition, median, suggestedTotal } from "@/lib/rules";
+import { canTransition, median, suggestedTotal } from "@/lib/rules";
 import { formatKES, formatKESRate } from "@/lib/currency";
-
-describe("minimumPrice", () => {
-  it("multiplies rate by hours", () => {
-    expect(minimumPrice(8, 24)).toBe(192);
-  });
-  it("rounds to cents", () => {
-    expect(minimumPrice(7.333, 3)).toBe(22);
-  });
-});
-
-describe("isPriceAllowed", () => {
-  it("allows price at exactly the minimum", () => {
-    expect(isPriceAllowed(192, 8, 24)).toBe(true);
-  });
-  it("rejects price below the minimum", () => {
-    expect(isPriceAllowed(191.99, 8, 24)).toBe(false);
-  });
-  it("allows price above the minimum", () => {
-    expect(isPriceAllowed(500, 8, 24)).toBe(true);
-  });
-});
 
 describe("canTransition", () => {
   it("PENDING can go to WISHLISTED, ACCEPTED, DENIED", () => {

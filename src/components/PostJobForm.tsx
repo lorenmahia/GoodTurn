@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { minimumPrice } from "@/lib/rules";
+import { suggestedTotal } from "@/lib/rules";
 
 type Category = { id: string; name: string; typicalHourlyRate: number };
 
@@ -24,7 +24,7 @@ export default function PostJobForm({ categories }: { categories: Category[] }) 
   const category = categories.find((c) => c.id === form.categoryId);
   const hours = Number(form.estimatedHours);
   const minPrice = useMemo(
-    () => (category && hours > 0 ? minimumPrice(category.typicalHourlyRate, hours) : null),
+    () => (category && hours > 0 ? suggestedTotal(category.typicalHourlyRate, hours) : null),
     [category, hours]
   );
 
