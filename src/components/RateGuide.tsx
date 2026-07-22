@@ -122,7 +122,7 @@ export default function RateGuide() {
             ))}
           </select>
         </label>
-        {market === "local" ? (
+        {market === "local" && (
           <label className="text-sm">
             Where in Kenya
             <select value={location} onChange={(e) => setLocation(e.target.value as KenyaLocation)} className={selectCls}>
@@ -131,17 +131,16 @@ export default function RateGuide() {
               ))}
             </select>
           </label>
-        ) : (
-          <label className="text-sm">
-            Billable hours / month
-            <input
-              type="number" min={60} max={200}
-              value={hours}
-              onChange={(e) => setHours(Number(e.target.value) || 120)}
-              className={selectCls}
-            />
-          </label>
         )}
+        <label className="text-sm">
+          Billable hours / month
+          <input
+            type="number" min={60} max={200}
+            value={hours}
+            onChange={(e) => setHours(Number(e.target.value) || 120)}
+            className={selectCls}
+          />
+        </label>
       </div>
 
       <div className="mt-5 grid grid-cols-3 gap-3 text-center">
@@ -175,8 +174,8 @@ export default function RateGuide() {
         <p className="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           Base rate for {BASE_RATES[role].label} ({market === "local" ? "local" : "international"} market:{" "}
           {formatKESRate(BASE_RATES[role][market])}) × experience × skill premium × reputation
-          {market === "local" && " × location"} — the six-factor model from the Kenya Freelance
-          Pricing Report (July 2026). Suggested is the point estimate; low/high are ×0.80/×1.25.
+          {market === "local" && " × location"} — the Kenya Freelance Pricing Report&apos;s rate
+          model (July 2026). Suggested is the point estimate; low/high are ×0.80/×1.25.
         </p>
       )}
     </section>
