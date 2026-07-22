@@ -7,8 +7,10 @@
   --color-ink: #0a0a0f;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 body {
-  @apply bg-white text-neutral-900 antialiased;
+  @apply bg-white text-neutral-900 antialiased dark:bg-ink dark:text-neutral-100;
 }
 
 /* ---------- Scroll reveal ----------
