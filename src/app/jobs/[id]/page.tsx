@@ -5,6 +5,8 @@ import { formatKES, formatKESRate } from "@/lib/currency";
 import ApplyForm from "@/components/ApplyForm";
 import ApplicantActions from "@/components/ApplicantActions";
 import EmployerBadge from "@/components/EmployerBadge";
+import GuaranteeBanner from "@/components/GuaranteeBanner";
+import ReportJobButton from "@/components/ReportJobButton";
 
 export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -29,6 +31,12 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
     : await prisma.application.findUnique({
         where: { jobId_applicantId: { jobId: id, applicantId: session.user.id } },
       });
+  const alreadyReported = isPoster
+    ? false
+    : (await prisma.jobReport.findUnique({
+        where: { jobId_reporterId: { jobId: id, reporterId: session.user.id } },
+        select: { id: true },
+      })) !== null;
   const applications = isPoster
     ? await prisma.application.findMany({
         where: { jobId: id },
@@ -64,24 +72,44 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         </div>
 
         <div>
-          {isPoster ? null : myApplication ? (
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-white/5">
-              <p className="font-medium">
-                You applied on {myApplication.createdAt.toLocaleDateString()} — status:{" "}
-                <span className="font-bold text-brand dark:text-accent">{myApplication.status}</span>
-              </p>
-              {myApplication.status === "ACCEPTED" && (
-                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-                  Congratulations! You&apos;ll coordinate the work through Goodturn Connect (coming soon).
+          {job.hidden ? (
+            <p className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+              This job is under review and is not currently accepting applications.
+              {isPoster && " If you believe this is a mistake, contact support."}
+            </p>
+          ) : (
+            <>
+              {isPoster ? null : myApplication ? (
+                <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-white/5">
+                  <p className="font-medium">
+                    You applied on {myApplication.createdAt.toLocaleDateString()} — status:{" "}
+                    <span className="font-bold text-brand dark:text-accent">{myApplication.status}</span>
+                  </p>
+                  {myApplication.status === "ACCEPTED" && (
+                    <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                      Congratulations! You&apos;ll coordinate the work through Goodturn Connect (coming soon).
+                    </p>
+                  )}
+                </div>
+              ) : job.status === "OPEN" ? (
+                <ApplyForm jobId={job.id} defaultName={me!.displayName} defaultLocation={me!.location} />
+              ) : (
+                <p className="rounded-2xl bg-neutral-100 p-5 text-neutral-600 dark:bg-white/5 dark:text-neutral-400">
+                  This job is no longer open for applications.
                 </p>
               )}
-            </div>
-          ) : job.status === "OPEN" ? (
-            <ApplyForm jobId={job.id} defaultName={me!.displayName} defaultLocation={me!.location} />
-          ) : (
-            <p className="rounded-2xl bg-neutral-100 p-5 text-neutral-600 dark:bg-white/5 dark:text-neutral-400">
-              This job is no longer open for applications.
-            </p>
+
+              {!isPoster && (
+                <div className="mt-4 space-y-3">
+                  <GuaranteeBanner />
+                  {alreadyReported ? (
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">You reported this job.</p>
+                  ) : (
+                    <ReportJobButton jobId={job.id} />
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
