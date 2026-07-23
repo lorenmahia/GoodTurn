@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import BalanceCard from "@/components/BalanceCard";
 import ComingSoon from "@/components/ComingSoon";
+import CompleteJobButton from "@/components/CompleteJobButton";
 
 export default async function AccountPage() {
   const session = await auth();
@@ -12,12 +13,18 @@ export default async function AccountPage() {
   const user = await prisma.user.findUniqueOrThrow({ where: { id: session.user.id } });
   const myApplications = await prisma.application.findMany({
     where: { applicantId: user.id },
-    include: { job: { select: { id: true, title: true, status: true } } },
+    include: {
+      job: { select: { id: true, title: true, status: true } },
+      connection: { select: { id: true } },
+    },
     orderBy: { createdAt: "desc" },
   });
   const jobsPosted = await prisma.job.findMany({
     where: { posterId: user.id },
-    include: { _count: { select: { applications: true } } },
+    include: {
+      _count: { select: { applications: true } },
+      connections: { select: { id: true, status: true } },
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -64,7 +71,14 @@ export default async function AccountPage() {
             {myApplications.map((a) => (
               <li key={a.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-neutral-200 px-4 py-3">
                 <Link href={`/jobs/${a.job.id}`} className="font-medium text-brand hover:underline">{a.job.title}</Link>
-                <span className="text-sm font-semibold text-neutral-600">{a.status}</span>
+                <span className="flex items-center gap-3">
+                  {a.status === "ACCEPTED" && a.connection && (
+                    <Link href={`/connect/${a.connection.id}`} className="text-sm font-semibold text-accent hover:underline">
+                      Open Connect →
+                    </Link>
+                  )}
+                  <span className="text-sm font-semibold text-neutral-600">{a.status}</span>
+                </span>
               </li>
             ))}
           </ul>
@@ -82,8 +96,16 @@ export default async function AccountPage() {
             {jobsPosted.map((j) => (
               <li key={j.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-neutral-200 px-4 py-3">
                 <Link href={`/jobs/${j.id}`} className="font-medium text-brand hover:underline">{j.title}</Link>
-                <span className="text-sm text-neutral-600">
-                  {j._count.applications} application{j._count.applications === 1 ? "" : "s"} · {j.status.replace("_", " ")}
+                <span className="flex flex-wrap items-center gap-3">
+                  {j.status === "IN_PROGRESS" && j.connections[0] && (
+                    <Link href={`/connect/${j.connections[0].id}`} className="text-sm font-semibold text-accent hover:underline">
+                      Open Connect →
+                    </Link>
+                  )}
+                  {j.status === "IN_PROGRESS" && <CompleteJobButton jobId={j.id} />}
+                  <span className="text-sm text-neutral-600">
+                    {j._count.applications} application{j._count.applications === 1 ? "" : "s"} · {j.status.replace("_", " ")}
+                  </span>
                 </span>
               </li>
             ))}

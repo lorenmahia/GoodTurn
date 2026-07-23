@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ChatBubble() {
@@ -7,12 +8,17 @@ export default function ChatBubble() {
   return (
     <div className="fixed bottom-5 right-5 z-50">
       {open && (
-        <div className="mb-3 w-72 rounded-xl border border-neutral-200 bg-white p-4 shadow-xl">
-          <h3 className="font-semibold text-brand">Goodturn Connect</h3>
-          <p className="mt-1 text-sm text-neutral-600">
-            Chat, calls and SMS with your clients are coming soon. You will be automatically
-            logged in to Goodturn Connect when you post a job or are accepted for one.
+        <div className="mb-3 w-72 rounded-xl border border-neutral-200 bg-white p-4 shadow-xl dark:border-neutral-800 dark:bg-charcoal">
+          <h3 className="font-semibold text-brand dark:text-accent">Goodturn Connect</h3>
+          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
+            Your job conversations live here. A thread opens when you accept an applicant or are accepted for a job.
           </p>
+          <Link
+            href="/connect"
+            className="mt-3 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition hover:bg-accent"
+          >
+            Open Connect
+          </Link>
         </div>
       )}
       <button
