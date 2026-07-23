@@ -32,6 +32,6 @@ export async function searchJobs(query: JobQuery) {
   return prisma.job.findMany({
     where: buildJobWhere(query),
     orderBy: buildJobOrderBy(query.sort),
-    include: { category: true, poster: { select: { displayName: true } } },
+    include: { category: true, poster: { select: { displayName: true, isVerified: true, completedHires: true } } },
   });
 }

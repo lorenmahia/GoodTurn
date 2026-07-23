@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { formatKES, formatKESRate } from "@/lib/currency";
 import ApplyForm from "@/components/ApplyForm";
 import ApplicantActions from "@/components/ApplicantActions";
+import EmployerBadge from "@/components/EmployerBadge";
 
 export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -12,7 +13,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
 
   const job = await prisma.job.findUnique({
     where: { id },
-    include: { category: true, poster: { select: { id: true, displayName: true } } },
+    include: { category: true, poster: { select: { id: true, displayName: true, isVerified: true, completedHires: true } } },
   });
   if (!job) notFound();
 
@@ -53,7 +54,10 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
           <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
             <span className="rounded-full bg-ink px-3 py-1 font-semibold text-white dark:bg-white/10">{priceLabel}</span>
             <span>~{job.estimatedHours}h</span>
-            <span>posted by {job.poster.displayName}</span>
+            <span className="inline-flex items-center gap-1.5">
+              posted by {job.poster.displayName}
+              <EmployerBadge isVerified={job.poster.isVerified} completedHires={job.poster.completedHires} />
+            </span>
             <span className="text-xs font-semibold uppercase tracking-wide">{job.status.replace("_", " ")}</span>
           </div>
           <p className="mt-8 whitespace-pre-line leading-relaxed text-neutral-800 dark:text-neutral-200">{job.description}</p>

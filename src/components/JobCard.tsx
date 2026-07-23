@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatKES, formatKESRate } from "@/lib/currency";
+import EmployerBadge from "@/components/EmployerBadge";
 
 export type JobCardData = {
   id: string;
@@ -12,7 +13,7 @@ export type JobCardData = {
   status: string;
   createdAt: Date;
   category: { name: string };
-  poster: { displayName: string };
+  poster: { displayName: string; isVerified: boolean; completedHires: number };
   score?: number;
 };
 
@@ -35,7 +36,10 @@ export default function JobCard({ job }: { job: JobCardData }) {
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
         <span className="rounded-full bg-accent/15 px-2 py-0.5 font-medium text-accent">{job.category.name}</span>
         <span>~{job.estimatedHours}h</span>
-        <span>by {job.poster.displayName}</span>
+        <span className="inline-flex items-center gap-1.5">
+          by {job.poster.displayName}
+          <EmployerBadge isVerified={job.poster.isVerified} completedHires={job.poster.completedHires} />
+        </span>
         {typeof job.score === "number" && (
           <span className="ml-auto font-semibold text-brand dark:text-accent">match score {job.score}</span>
         )}
