@@ -59,7 +59,7 @@ export default function ProfileForm({ user }: { user: ProfileData }) {
         {fieldError("skills") && <p className="mt-1 text-sm text-red-600">{fieldError("skills")}</p>}
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium">Hourly rate (USD)</label>
+        <label className="mb-1 block text-sm font-medium">Hourly rate (KSh/h)</label>
         <input
           type="number" min="0" step="0.5"
           value={form.hourlyRate}

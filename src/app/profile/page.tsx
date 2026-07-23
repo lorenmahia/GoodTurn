@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import ProfileForm from "@/components/ProfileForm";
+import RateGuide from "@/components/RateGuide";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -21,6 +22,7 @@ export default async function ProfilePage() {
       <div className="mt-8">
         <ProfileForm user={user} />
       </div>
+      <RateGuide />
     </div>
   );
 }

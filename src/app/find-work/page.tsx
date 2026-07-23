@@ -7,6 +7,7 @@ import { searchJobs } from "@/lib/jobs";
 import { rankJobs } from "@/lib/match";
 import JobCard, { type JobCardData } from "@/components/JobCard";
 import QuickLinks from "@/components/QuickLinks";
+import MarketInsightsPanel from "@/components/MarketInsightsPanel";
 
 export default async function FindWorkPage({
   searchParams,
@@ -20,66 +21,109 @@ export default async function FindWorkPage({
   const parsed = jobQuerySchema.safeParse(raw);
   const query = parsed.success ? parsed.data : jobQuerySchema.parse({});
   const matchMode = raw.match === "1";
+  const insightsMode = raw.view === "insights";
 
-  let jobs: JobCardData[];
-  if (matchMode) {
-    const user = await prisma.user.findUniqueOrThrow({ where: { id: session.user.id } });
-    const open = await prisma.job.findMany({
-      where: { status: "OPEN", NOT: { posterId: user.id } },
-      include: { category: true, poster: { select: { displayName: true } } },
+  // Market Insights is public benchmark data only — it reads no platform data,
+  // so the job and category queries are skipped entirely in that mode.
+  let jobs: JobCardData[] = [];
+  let categories: { id: string; name: string }[] = [];
+  if (!insightsMode) {
+    if (matchMode) {
+      const user = await prisma.user.findUniqueOrThrow({ where: { id: session.user.id } });
+      const open = await prisma.job.findMany({
+        where: { status: "OPEN", NOT: { posterId: user.id } },
+        include: { category: true, poster: { select: { displayName: true } } },
+      });
+      jobs = rankJobs(user.skills, open.map((j) => ({ ...j, categoryName: j.category.name })));
+    } else {
+      jobs = await searchJobs(query);
+    }
+
+    categories = await prisma.category.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
     });
-    jobs = rankJobs(user.skills, open.map((j) => ({ ...j, categoryName: j.category.name })));
-  } else {
-    jobs = await searchJobs(query);
   }
-
-  const categories = await prisma.category.findMany({ orderBy: { name: "asc" } });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <section className="rounded-2xl bg-gradient-to-r from-brand to-[#2a3568] px-6 py-10 text-white">
-        <h1 className="text-3xl font-bold">Welcome{session.user.name ? `, ${session.user.name}` : ""}</h1>
-        <p className="mt-2 text-lg text-neutral-200">Looking for work. We got you!!</p>
-      </section>
-
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_260px]">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <form method="get" action="/find-work" className="rounded-xl border border-neutral-200 p-4">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Find Work</p>
+          <h1 className="mt-1 text-3xl font-extrabold text-brand dark:text-accent">
+            {insightsMode ? "Market insights" : matchMode ? "Your best matches" : "Open jobs"}
+          </h1>
+        </div>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+          {!insightsMode && (
+            <>
+              {jobs.length} {matchMode ? "match" : "job"}{jobs.length === 1 ? "" : matchMode ? "es" : "s"} ·{" "}
+            </>
+          )}
+          welcome{session.user.name ? `, ${session.user.name}` : ""}
+        </p>
+      </div>
+
+      <div className="mt-6 flex gap-2">
+        <Link
+          href="/find-work"
+          className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${!insightsMode ? "bg-brand text-white" : "bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-white/10 dark:text-neutral-300 dark:hover:bg-white/20"}`}
+        >
+          Open jobs
+        </Link>
+        <Link
+          href="/find-work?view=insights"
+          className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${insightsMode ? "bg-brand text-white" : "bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-white/10 dark:text-neutral-300 dark:hover:bg-white/20"}`}
+        >
+          Market insights
+        </Link>
+      </div>
+
+      <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_260px]">
+        {insightsMode ? (
+          <MarketInsightsPanel />
+        ) : (
+        <div>
+          <form
+            method="get"
+            action="/find-work"
+            className="sticky top-16 z-10 rounded-xl border border-neutral-200 bg-white/95 p-4 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-ink/95"
+          >
             <div className="flex flex-wrap gap-3">
               <input
                 name="q"
                 defaultValue={query.q ?? ""}
-                placeholder="Search for Work"
-                className="min-w-48 flex-1 rounded border border-neutral-300 px-3 py-2 focus:border-brand focus:outline-none"
+                placeholder="Search for work"
+                className="min-w-48 flex-1 rounded-lg border border-neutral-300 bg-white px-3 py-2 focus:border-brand focus:outline-none dark:border-neutral-700 dark:bg-white/5 dark:focus:border-accent"
               />
               <select
                 name="category"
                 defaultValue={query.category ?? ""}
-                className="rounded border border-neutral-300 px-3 py-2"
+                className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-white/5"
               >
                 <option value="">All categories</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.name}>{c.name}</option>
                 ))}
               </select>
-              <button className="rounded bg-brand px-5 py-2 font-medium text-white hover:bg-accent">Search</button>
+              <button className="rounded-lg bg-brand px-5 py-2 font-medium text-white transition hover:bg-accent">Search</button>
             </div>
             <details className="mt-3" open={query.minPrice !== undefined || query.maxPrice !== undefined || query.sort !== "newest"}>
-              <summary className="cursor-pointer select-none rounded bg-accent px-4 py-2 text-sm font-medium text-white [display:inline-block]">
+              <summary className="cursor-pointer select-none rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white [display:inline-block]">
                 More filters
               </summary>
               <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
                 <label>
-                  Min price{" "}
-                  <input name="minPrice" type="number" min="0" defaultValue={query.minPrice ?? ""} className="w-24 rounded border border-neutral-300 px-2 py-1" />
+                  Min KSh{" "}
+                  <input name="minPrice" type="number" min="0" defaultValue={query.minPrice ?? ""} className="w-24 rounded-lg border border-neutral-300 bg-white px-2 py-1 dark:border-neutral-700 dark:bg-white/5" />
                 </label>
                 <label>
-                  Max price{" "}
-                  <input name="maxPrice" type="number" min="0" defaultValue={query.maxPrice ?? ""} className="w-24 rounded border border-neutral-300 px-2 py-1" />
+                  Max KSh{" "}
+                  <input name="maxPrice" type="number" min="0" defaultValue={query.maxPrice ?? ""} className="w-24 rounded-lg border border-neutral-300 bg-white px-2 py-1 dark:border-neutral-700 dark:bg-white/5" />
                 </label>
                 <label>
                   Sort{" "}
-                  <select name="sort" defaultValue={query.sort} className="rounded border border-neutral-300 px-2 py-1">
+                  <select name="sort" defaultValue={query.sort} className="rounded-lg border border-neutral-300 bg-white px-2 py-1 dark:border-neutral-700 dark:bg-white/5">
                     <option value="newest">Newest</option>
                     <option value="price-asc">Price: low to high</option>
                     <option value="price-desc">Price: high to low</option>
@@ -90,17 +134,17 @@ export default async function FindWorkPage({
           </form>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-neutral-600">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
               {matchMode
-                ? `Best matches for your skills — ${jobs.length} found. Complete your profile to make it more accurate.`
-                : `${jobs.length} open job${jobs.length === 1 ? "" : "s"}`}
+                ? "Ranked against the skills on your profile — improve your profile to sharpen the ranking."
+                : "Newest first unless you sort otherwise."}
             </p>
             {matchMode ? (
-              <Link href="/find-work" className="rounded bg-neutral-200 px-4 py-2 text-sm font-medium hover:bg-neutral-300">
+              <Link href="/find-work" className="rounded-lg bg-neutral-200 px-4 py-2 text-sm font-medium transition hover:bg-neutral-300 dark:bg-white/10 dark:hover:bg-white/20">
                 Back to all jobs
               </Link>
             ) : (
-              <Link href="/find-work?match=1" className="rounded bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700">
+              <Link href="/find-work?match=1" className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 dark:bg-accent dark:hover:opacity-90">
                 Find Best Match
               </Link>
             )}
@@ -112,13 +156,14 @@ export default async function FindWorkPage({
             ))}
           </div>
           {jobs.length === 0 && (
-            <p className="mt-10 text-center text-neutral-500">
+            <p className="mt-10 text-center text-neutral-500 dark:text-neutral-400">
               {matchMode
                 ? "No matches yet — add skills to your profile so we can match you."
                 : "No jobs found. Try different filters."}
             </p>
           )}
         </div>
+        )}
         <QuickLinks />
       </div>
     </div>

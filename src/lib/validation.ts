@@ -6,16 +6,23 @@ export const signupSchema = z.object({
   displayName: z.string().min(2).max(60),
 });
 
-export const jobCreateSchema = z.object({
+const jobBase = {
   title: z.string().min(5).max(100),
   description: z.string().min(20).max(5000),
   categoryId: z.string().min(1),
   estimatedHours: z.number().positive().max(1000),
-  price: z.number().positive(),
-});
+};
+
+export const jobCreateSchema = z.discriminatedUnion("paymentType", [
+  z.object({ ...jobBase, paymentType: z.literal("FIXED"), price: z.number().positive() }),
+  z.object({ ...jobBase, paymentType: z.literal("HOURLY"), hourlyRate: z.number().positive() }),
+]);
 
 export const applySchema = z.object({
+  name: z.string().min(2).max(60),
+  location: z.string().min(2).max(80),
   coverNote: z.string().min(10).max(2000),
+  resumeId: z.string().optional(),
 });
 
 export const applicationPatchSchema = z.object({
@@ -41,4 +48,5 @@ export const jobQuerySchema = z.object({
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   sort: z.enum(["newest", "price-asc", "price-desc"]).default("newest"),
+  view: z.enum(["insights"]).optional(),
 });

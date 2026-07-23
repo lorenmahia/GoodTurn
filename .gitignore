@@ -49,5 +49,11 @@ prisma/dev.db
 prisma/dev.db-journal
 sample_webpage_recording.mp4
 
-# local claude settings
+# local agent tooling & session state — none of this affects the webapp
 .claude/
+.superpowers/
+.remember/
+
+# internal planning docs and market research (kept local, not published)
+/docs/
+Kenya_Freelance_Pricing_Report.docx
