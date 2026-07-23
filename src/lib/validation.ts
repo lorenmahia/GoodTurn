@@ -48,4 +48,5 @@ export const jobQuerySchema = z.object({
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   sort: z.enum(["newest", "price-asc", "price-desc"]).default("newest"),
+  view: z.enum(["insights"]).optional(),
 });

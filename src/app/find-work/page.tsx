@@ -7,6 +7,7 @@ import { searchJobs } from "@/lib/jobs";
 import { rankJobs } from "@/lib/match";
 import JobCard, { type JobCardData } from "@/components/JobCard";
 import QuickLinks from "@/components/QuickLinks";
+import MarketInsightsPanel from "@/components/MarketInsightsPanel";
 
 export default async function FindWorkPage({
   searchParams,
@@ -20,20 +21,29 @@ export default async function FindWorkPage({
   const parsed = jobQuerySchema.safeParse(raw);
   const query = parsed.success ? parsed.data : jobQuerySchema.parse({});
   const matchMode = raw.match === "1";
+  const insightsMode = raw.view === "insights";
 
-  let jobs: JobCardData[];
-  if (matchMode) {
-    const user = await prisma.user.findUniqueOrThrow({ where: { id: session.user.id } });
-    const open = await prisma.job.findMany({
-      where: { status: "OPEN", NOT: { posterId: user.id } },
-      include: { category: true, poster: { select: { displayName: true } } },
+  // Market Insights is public benchmark data only — it reads no platform data,
+  // so the job and category queries are skipped entirely in that mode.
+  let jobs: JobCardData[] = [];
+  let categories: { id: string; name: string }[] = [];
+  if (!insightsMode) {
+    if (matchMode) {
+      const user = await prisma.user.findUniqueOrThrow({ where: { id: session.user.id } });
+      const open = await prisma.job.findMany({
+        where: { status: "OPEN", NOT: { posterId: user.id } },
+        include: { category: true, poster: { select: { displayName: true } } },
+      });
+      jobs = rankJobs(user.skills, open.map((j) => ({ ...j, categoryName: j.category.name })));
+    } else {
+      jobs = await searchJobs(query);
+    }
+
+    categories = await prisma.category.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
     });
-    jobs = rankJobs(user.skills, open.map((j) => ({ ...j, categoryName: j.category.name })));
-  } else {
-    jobs = await searchJobs(query);
   }
-
-  const categories = await prisma.category.findMany({ orderBy: { name: "asc" } });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -41,16 +51,38 @@ export default async function FindWorkPage({
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Find Work</p>
           <h1 className="mt-1 text-3xl font-extrabold text-brand dark:text-accent">
-            {matchMode ? "Your best matches" : "Open jobs"}
+            {insightsMode ? "Market insights" : matchMode ? "Your best matches" : "Open jobs"}
           </h1>
         </div>
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          {jobs.length} {matchMode ? "match" : "job"}{jobs.length === 1 ? "" : matchMode ? "es" : "s"} · welcome
-          {session.user.name ? `, ${session.user.name}` : ""}
+          {!insightsMode && (
+            <>
+              {jobs.length} {matchMode ? "match" : "job"}{jobs.length === 1 ? "" : matchMode ? "es" : "s"} ·{" "}
+            </>
+          )}
+          welcome{session.user.name ? `, ${session.user.name}` : ""}
         </p>
       </div>
 
+      <div className="mt-6 flex gap-2">
+        <Link
+          href="/find-work"
+          className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${!insightsMode ? "bg-brand text-white" : "bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-white/10 dark:text-neutral-300 dark:hover:bg-white/20"}`}
+        >
+          Open jobs
+        </Link>
+        <Link
+          href="/find-work?view=insights"
+          className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${insightsMode ? "bg-brand text-white" : "bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-white/10 dark:text-neutral-300 dark:hover:bg-white/20"}`}
+        >
+          Market insights
+        </Link>
+      </div>
+
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_260px]">
+        {insightsMode ? (
+          <MarketInsightsPanel />
+        ) : (
         <div>
           <form
             method="get"
@@ -131,6 +163,7 @@ export default async function FindWorkPage({
             </p>
           )}
         </div>
+        )}
         <QuickLinks />
       </div>
     </div>
