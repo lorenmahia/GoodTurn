@@ -3,8 +3,8 @@ import { buildJobWhere, buildJobOrderBy } from "@/lib/jobs";
 import { jobQuerySchema } from "@/lib/validation";
 
 describe("buildJobWhere", () => {
-  it("always restricts to OPEN jobs", () => {
-    expect(buildJobWhere(jobQuerySchema.parse({}))).toEqual({ status: "OPEN" });
+  it("always restricts to OPEN, non-hidden jobs", () => {
+    expect(buildJobWhere(jobQuerySchema.parse({}))).toEqual({ status: "OPEN", hidden: false });
   });
   it("adds keyword OR clause and price range", () => {
     const where = buildJobWhere(jobQuerySchema.parse({ q: "react", minPrice: "100", maxPrice: "300" }));
