@@ -1,4 +1,10 @@
 import { z } from "zod";
+import { REPORT_REASONS } from "@/lib/trust";
+
+export const jobReportSchema = z.object({
+  reason: z.enum(REPORT_REASONS),
+  note: z.string().max(1000).optional(),
+});
 
 export const signupSchema = z.object({
   email: z.string().email(),
