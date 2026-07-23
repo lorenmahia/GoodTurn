@@ -15,6 +15,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     links: [
       { label: "Goodturn Forum", href: "/learn" },
       { label: "Trusted Agencies", href: "/learn" },
+      { label: "Trust & Safety", href: "/safety" },
       { label: "FAQ's", href: "/how-it-works" },
     ],
   },
