@@ -58,6 +58,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       where: { jobId: id, status: "ACTIVE" },
       data: { status: "CLOSED", closedAt: new Date() },
     }),
+    ...(parsed.data.status === "COMPLETED"
+      ? [prisma.user.update({ where: { id: job.posterId }, data: { completedHires: { increment: 1 } } })]
+      : []),
   ]);
   return NextResponse.json({ job: updated });
 }
