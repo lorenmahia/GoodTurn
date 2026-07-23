@@ -70,6 +70,27 @@ async function main() {
     await prisma.application.create({
       data: { jobId: firstJob.id, applicantId: users[0].id, coverNote: "I have written 40+ travel articles; happy to share samples." },
     });
+
+    // Demo Connect thread: accept one application and open a connection.
+    const demoApp = await prisma.application.findFirst({ include: { job: true } });
+    if (demoApp && demoApp.job.posterId !== demoApp.applicantId) {
+      await prisma.application.update({ where: { id: demoApp.id }, data: { status: "ACCEPTED" } });
+      await prisma.job.update({ where: { id: demoApp.jobId }, data: { status: "IN_PROGRESS" } });
+      const connection = await prisma.connection.create({
+        data: {
+          jobId: demoApp.jobId,
+          applicationId: demoApp.id,
+          clientId: demoApp.job.posterId,
+          freelancerId: demoApp.applicantId,
+        },
+      });
+      await prisma.message.createMany({
+        data: [
+          { connectionId: connection.id, senderId: demoApp.applicantId, body: "Hi! Excited to get started — I'll send a first draft tonight." },
+          { connectionId: connection.id, senderId: demoApp.job.posterId, body: "Great, looking forward to it. Let me know if you need anything." },
+        ],
+      });
+    }
   }
   console.log("Seed complete.");
 }

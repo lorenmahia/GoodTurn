@@ -22,6 +22,9 @@ model User {
   jobsPosted     Job[]
   applications   Application[]
   resumes        Resume[]
+  connectionsAsClient     Connection[] @relation("ConnectionClient")
+  connectionsAsFreelancer Connection[] @relation("ConnectionFreelancer")
+  messages                Message[]
 }
 
 model Category {
@@ -47,6 +50,7 @@ model Job {
   poster         User          @relation(fields: [posterId], references: [id])
   createdAt      DateTime      @default(now())
   applications   Application[]
+  connections    Connection[]
 }
 
 model Application {
@@ -62,6 +66,7 @@ model Application {
   resume            Resume?  @relation(fields: [resumeId], references: [id])
   status            String   @default("PENDING") // PENDING|WISHLISTED|ACCEPTED|DENIED
   createdAt         DateTime @default(now())
+  connection        Connection?
 
   @@unique([jobId, applicantId])
 }
@@ -82,4 +87,30 @@ model ContactMessage {
   email     String
   message   String
   createdAt DateTime @default(now())
+}
+
+model Connection {
+  id            String      @id @default(cuid())
+  jobId         String
+  job           Job         @relation(fields: [jobId], references: [id])
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id])
+  clientId      String
+  client        User        @relation("ConnectionClient", fields: [clientId], references: [id])
+  freelancerId  String
+  freelancer    User        @relation("ConnectionFreelancer", fields: [freelancerId], references: [id])
+  status        String      @default("ACTIVE") // ACTIVE | CLOSED
+  closedAt      DateTime?
+  createdAt     DateTime    @default(now())
+  messages      Message[]
+}
+
+model Message {
+  id           String     @id @default(cuid())
+  connectionId String
+  connection   Connection @relation(fields: [connectionId], references: [id])
+  senderId     String
+  sender       User       @relation(fields: [senderId], references: [id])
+  body         String
+  createdAt    DateTime   @default(now())
 }
