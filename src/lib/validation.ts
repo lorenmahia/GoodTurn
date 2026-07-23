@@ -42,6 +42,14 @@ export const contactSchema = z.object({
   message: z.string().min(10).max(5000),
 });
 
+export const messageSchema = z.object({
+  body: z.string().min(1).max(2000),
+});
+
+export const jobPatchSchema = z.object({
+  status: z.enum(["COMPLETED", "CANCELLED"]),
+});
+
 export const jobQuerySchema = z.object({
   q: z.string().optional(),
   category: z.string().optional(),
