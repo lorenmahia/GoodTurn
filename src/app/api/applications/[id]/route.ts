@@ -30,7 +30,17 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const [updated] = await prisma.$transaction([
     prisma.application.update({ where: { id }, data: { status: to } }),
     ...(to === "ACCEPTED"
-      ? [prisma.job.update({ where: { id: application.jobId }, data: { status: "IN_PROGRESS" } })]
+      ? [
+          prisma.job.update({ where: { id: application.jobId }, data: { status: "IN_PROGRESS" } }),
+          prisma.connection.create({
+            data: {
+              jobId: application.jobId,
+              applicationId: application.id,
+              clientId: application.job.posterId,
+              freelancerId: application.applicantId,
+            },
+          }),
+        ]
       : []),
   ]);
   return NextResponse.json({ application: updated });
