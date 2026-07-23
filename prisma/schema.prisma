@@ -18,10 +18,13 @@ model User {
   accountBalance Float         @default(0)
   publicUserId   String        @unique
   location       String        @default("")
+  completedHires Int           @default(0)
+  isVerified     Boolean       @default(false)
   createdAt      DateTime      @default(now())
   jobsPosted     Job[]
   applications   Application[]
   resumes        Resume[]
+  reportsFiled   JobReport[]
   connectionsAsClient     Connection[] @relation("ConnectionClient")
   connectionsAsFreelancer Connection[] @relation("ConnectionFreelancer")
   messages                Message[]
@@ -46,11 +49,13 @@ model Job {
   hourlyRate     Float?
   currency       String        @default("KES")
   status         String        @default("OPEN") // OPEN|IN_PROGRESS|COMPLETED|CANCELLED
+  hidden         Boolean       @default(false)
   posterId       String
   poster         User          @relation(fields: [posterId], references: [id])
   createdAt      DateTime      @default(now())
   applications   Application[]
   connections    Connection[]
+  reports        JobReport[]
 }
 
 model Application {
@@ -113,4 +118,17 @@ model Message {
   sender       User       @relation(fields: [senderId], references: [id])
   body         String
   createdAt    DateTime   @default(now())
+}
+
+model JobReport {
+  id         String   @id @default(cuid())
+  jobId      String
+  job        Job      @relation(fields: [jobId], references: [id])
+  reporterId String
+  reporter   User     @relation(fields: [reporterId], references: [id])
+  reason     String   // SCAM | ASKED_FOR_MONEY | OFF_PLATFORM | SPAM_DUPLICATE | INAPPROPRIATE | OTHER
+  note       String   @default("")
+  createdAt  DateTime @default(now())
+
+  @@unique([jobId, reporterId])
 }

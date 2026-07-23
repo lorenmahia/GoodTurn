@@ -31,9 +31,9 @@ async function main() {
 
   const passwordHash = await hash("demo1234", 10);
   const demoUsers = [
-    { email: "alice@example.com", displayName: "Alice Wanjiku", skills: "writing, editing, blogging", bio: "Content writer with 5 years of experience.", hourlyRate: 300, location: "Nairobi" },
-    { email: "bob@example.com", displayName: "Bob Otieno", skills: "development, react, node", bio: "Full-stack developer.", hourlyRate: 800, location: "Kisumu" },
-    { email: "carol@example.com", displayName: "Carol Njeri", skills: "design, figma, branding", bio: "Product designer and illustrator.", hourlyRate: 500, location: "Nairobi" },
+    { email: "alice@example.com", displayName: "Alice Wanjiku", skills: "writing, editing, blogging", bio: "Content writer with 5 years of experience.", hourlyRate: 300, location: "Nairobi", completedHires: 3 },
+    { email: "bob@example.com", displayName: "Bob Otieno", skills: "development, react, node", bio: "Full-stack developer.", hourlyRate: 800, location: "Kisumu", completedHires: 5 },
+    { email: "carol@example.com", displayName: "Carol Njeri", skills: "design, figma, branding", bio: "Product designer and illustrator.", hourlyRate: 500, location: "Nairobi", completedHires: 0 },
   ];
   const users = [];
   for (const u of demoUsers) {
