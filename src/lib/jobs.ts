@@ -6,7 +6,7 @@ import { jobQuerySchema } from "@/lib/validation";
 export type JobQuery = z.infer<typeof jobQuerySchema>;
 
 export function buildJobWhere(query: JobQuery): Prisma.JobWhereInput {
-  const where: Prisma.JobWhereInput = { status: "OPEN" };
+  const where: Prisma.JobWhereInput = { status: "OPEN", hidden: false };
   if (query.q) {
     where.OR = [{ title: { contains: query.q } }, { description: { contains: query.q } }];
   }

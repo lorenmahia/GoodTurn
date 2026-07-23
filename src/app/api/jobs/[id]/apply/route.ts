@@ -33,6 +33,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (job.status !== "OPEN") {
     return NextResponse.json({ error: "This job is no longer open for applications" }, { status: 400 });
   }
+  if (job.hidden) {
+    return NextResponse.json({ error: "This job is under review and not accepting applications" }, { status: 400 });
+  }
 
   if (resumeId) {
     const resume = await prisma.resume.findUnique({ where: { id: resumeId }, select: { ownerId: true } });

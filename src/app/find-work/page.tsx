@@ -31,7 +31,7 @@ export default async function FindWorkPage({
     if (matchMode) {
       const user = await prisma.user.findUniqueOrThrow({ where: { id: session.user.id } });
       const open = await prisma.job.findMany({
-        where: { status: "OPEN", NOT: { posterId: user.id } },
+        where: { status: "OPEN", hidden: false, NOT: { posterId: user.id } },
         include: { category: true, poster: { select: { displayName: true } } },
       });
       jobs = rankJobs(user.skills, open.map((j) => ({ ...j, categoryName: j.category.name })));
