@@ -52,6 +52,13 @@ export const messageSchema = z.object({
   body: z.string().min(1).max(2000),
 });
 
+export const reviewSchema = z.object({
+  ratingA: z.number().int().min(1).max(5),
+  ratingB: z.number().int().min(1).max(5),
+  ratingC: z.number().int().min(1).max(5),
+  comment: z.string().max(1000).optional(),
+});
+
 export const jobPatchSchema = z.object({
   status: z.enum(["COMPLETED", "CANCELLED"]),
 });
