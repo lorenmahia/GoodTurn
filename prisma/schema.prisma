@@ -28,6 +28,8 @@ model User {
   connectionsAsClient     Connection[] @relation("ConnectionClient")
   connectionsAsFreelancer Connection[] @relation("ConnectionFreelancer")
   messages                Message[]
+  reviewsWritten          Review[]     @relation("ReviewsWritten")
+  reviewsReceived         Review[]     @relation("ReviewsReceived")
 }
 
 model Category {
@@ -108,6 +110,7 @@ model Connection {
   closedAt      DateTime?
   createdAt     DateTime    @default(now())
   messages      Message[]
+  reviews       Review[]
 }
 
 model Message {
@@ -131,4 +134,22 @@ model JobReport {
   createdAt  DateTime @default(now())
 
   @@unique([jobId, reporterId])
+}
+
+model Review {
+  id           String     @id @default(cuid())
+  connectionId String
+  connection   Connection @relation(fields: [connectionId], references: [id])
+  authorId     String     // who wrote it
+  author       User       @relation("ReviewsWritten", fields: [authorId], references: [id])
+  subjectId    String     // who it is about
+  subject      User       @relation("ReviewsReceived", fields: [subjectId], references: [id])
+  direction    String     // CLIENT_ON_FREELANCER | FREELANCER_ON_CLIENT
+  ratingA      Int        // criterion 1 (1-5)
+  ratingB      Int        // criterion 2 (1-5)
+  ratingC      Int        // criterion 3 (1-5)
+  comment      String     @default("")
+  createdAt    DateTime   @default(now())
+
+  @@unique([connectionId, authorId])
 }

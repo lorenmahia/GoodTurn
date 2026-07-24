@@ -91,6 +91,58 @@ async function main() {
         ],
       });
     }
+
+    // Demo completed job with a two-sided, fully-revealed review pair,
+    // so public profiles and the Job Success Score have data on a fresh DB.
+    const completedJob = await prisma.job.findFirst({ where: { title: "Landing page redesign" } });
+    if (completedJob) {
+      const app = await prisma.application.upsert({
+        where: { jobId_applicantId: { jobId: completedJob.id, applicantId: users[1].id } },
+        update: { status: "ACCEPTED" },
+        create: {
+          jobId: completedJob.id,
+          applicantId: users[1].id,
+          coverNote: "I can redesign this cleanly — portfolio on request.",
+          status: "ACCEPTED",
+        },
+      });
+      await prisma.job.update({ where: { id: completedJob.id }, data: { status: "COMPLETED" } });
+      const conn = await prisma.connection.upsert({
+        where: { applicationId: app.id },
+        update: { status: "CLOSED", closedAt: new Date() },
+        create: {
+          jobId: completedJob.id,
+          applicationId: app.id,
+          clientId: completedJob.posterId,
+          freelancerId: users[1].id,
+          status: "CLOSED",
+          closedAt: new Date(),
+        },
+      });
+      const existingReviews = await prisma.review.count({ where: { connectionId: conn.id } });
+      if (existingReviews === 0) {
+        await prisma.review.createMany({
+          data: [
+            {
+              connectionId: conn.id,
+              authorId: completedJob.posterId,
+              subjectId: users[1].id,
+              direction: "CLIENT_ON_FREELANCER",
+              ratingA: 5, ratingB: 5, ratingC: 4,
+              comment: "Great work, delivered ahead of schedule.",
+            },
+            {
+              connectionId: conn.id,
+              authorId: users[1].id,
+              subjectId: completedJob.posterId,
+              direction: "FREELANCER_ON_CLIENT",
+              ratingA: 5, ratingB: 4, ratingC: 5,
+              comment: "Clear brief and responsive throughout.",
+            },
+          ],
+        });
+      }
+    }
   }
   console.log("Seed complete.");
 }
