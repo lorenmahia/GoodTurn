@@ -58,6 +58,15 @@ describe("isRevealed", () => {
   it("stays hidden when there is no closedAt and no counterpart", () => {
     expect(isRevealed({ counterpartExists: false, closedAt: null, now })).toBe(false);
   });
+  const WINDOW_MS = REVIEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+  it("reveals exactly at the 14-day boundary (>=, not >)", () => {
+    const closedAt = new Date(now.getTime() - WINDOW_MS);
+    expect(isRevealed({ counterpartExists: false, closedAt, now })).toBe(true);
+  });
+  it("stays hidden one millisecond before the 14-day boundary", () => {
+    const closedAt = new Date(now.getTime() - (WINDOW_MS - 1));
+    expect(isRevealed({ counterpartExists: false, closedAt, now })).toBe(false);
+  });
   it("uses a 14-day window", () => {
     expect(REVIEW_WINDOW_DAYS).toBe(14);
   });
