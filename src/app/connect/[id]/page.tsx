@@ -4,6 +4,9 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { participantRole, CLOSED_THREAD_NOTICE } from "@/lib/connect";
 import MessageComposer from "@/components/MessageComposer";
+import ReviewForm from "@/components/ReviewForm";
+import Stars from "@/components/Stars";
+import { reviewDirection, overallRating, isRevealed, REVIEW_WINDOW_DAYS } from "@/lib/reviews";
 
 export default async function ConnectThreadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -14,7 +17,10 @@ export default async function ConnectThreadPage({ params }: { params: Promise<{ 
   const connection = await prisma.connection.findUnique({
     where: { id },
     include: {
-      job: { select: { id: true, title: true } },
+      job: { select: { id: true, title: true, status: true } },
+      reviews: {
+        select: { authorId: true, ratingA: true, ratingB: true, ratingC: true, comment: true, createdAt: true },
+      },
       client: { select: { displayName: true } },
       freelancer: { select: { displayName: true } },
       messages: {
@@ -30,6 +36,13 @@ export default async function ConnectThreadPage({ params }: { params: Promise<{ 
   const iAmClient = connection.clientId === uid;
   const other = iAmClient ? connection.freelancer.displayName : connection.client.displayName;
   const isActive = connection.status === "ACTIVE";
+  const jobDone = connection.job.status === "COMPLETED";
+  const myReview = connection.reviews.find((r) => r.authorId === uid) ?? null;
+  const counterpart = connection.reviews.find((r) => r.authorId !== uid) ?? null;
+  const direction = reviewDirection(connection, uid);
+  const counterpartVisible =
+    counterpart !== null &&
+    isRevealed({ counterpartExists: myReview !== null, closedAt: connection.closedAt, now: new Date() });
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-2xl flex-col px-4 py-8">
@@ -79,6 +92,40 @@ export default async function ConnectThreadPage({ params }: { params: Promise<{ 
         <p className="rounded-xl bg-neutral-100 px-4 py-3 text-center text-sm text-neutral-600 dark:bg-white/5 dark:text-neutral-400">
           {CLOSED_THREAD_NOTICE}
         </p>
+      )}
+
+      {jobDone && direction && (
+        <div className="mt-6 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+          <h2 className="text-lg font-bold">Reviews</h2>
+          <div className="mt-3">
+            {myReview ? (
+              <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
+                <p className="text-sm font-semibold">Your review</p>
+                <Stars value={overallRating(myReview)} />
+                {myReview.comment && <p className="mt-1 text-sm">{myReview.comment}</p>}
+              </div>
+            ) : (
+              <ReviewForm connectionId={connection.id} direction={direction} />
+            )}
+          </div>
+          <div className="mt-3">
+            {counterpartVisible ? (
+              <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
+                <p className="text-sm font-semibold">{other}&apos;s review</p>
+                <Stars value={overallRating(counterpart!)} />
+                {counterpart!.comment && <p className="mt-1 text-sm">{counterpart!.comment}</p>}
+              </div>
+            ) : counterpart ? (
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                {other}&apos;s review stays hidden until you leave yours (or {REVIEW_WINDOW_DAYS} days pass).
+              </p>
+            ) : (
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                {other} hasn&apos;t left a review yet.
+              </p>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
