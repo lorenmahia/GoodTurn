@@ -61,12 +61,18 @@ async function main() {
       { title: "Podcast editing (4 episodes)", description: "Edit four 45-minute podcast episodes: noise removal, intro/outro, level matching.", category: await cat("Video & Audio"), estimatedHours: 12, price: 4800, paymentType: "HOURLY", hourlyRate: 400, posterId: users[1].id },
       { title: "Customer support (2 weeks cover)", description: "Answer email and chat tickets for two weeks while our agent is on leave.", category: await cat("Customer Support"), estimatedHours: 60, price: 13200, paymentType: "FIXED", hourlyRate: null, posterId: users[0].id },
     ];
+    // Capture each created job so later demo steps reference it by its own
+    // id, never by title — titles are not unique keys and a title lookup can
+    // silently match the wrong (or a duplicate) row.
+    const createdJobs = [];
     for (const j of jobs) {
-      await prisma.job.create({
-        data: { title: j.title, description: j.description, categoryId: j.category, estimatedHours: j.estimatedHours, price: j.price, paymentType: j.paymentType, hourlyRate: j.hourlyRate, posterId: j.posterId },
-      });
+      createdJobs.push(
+        await prisma.job.create({
+          data: { title: j.title, description: j.description, categoryId: j.category, estimatedHours: j.estimatedHours, price: j.price, paymentType: j.paymentType, hourlyRate: j.hourlyRate, posterId: j.posterId },
+        })
+      );
     }
-    const firstJob = await prisma.job.findFirstOrThrow({ where: { title: "Blog articles for a travel startup" } });
+    const firstJob = createdJobs[0]; // "Blog articles for a travel startup" — demo Connect thread
     await prisma.application.create({
       data: { jobId: firstJob.id, applicantId: users[0].id, coverNote: "I have written 40+ travel articles; happy to share samples." },
     });
@@ -92,9 +98,10 @@ async function main() {
       });
     }
 
-    // Demo completed job with a two-sided, fully-revealed review pair,
-    // so public profiles and the Job Success Score have data on a fresh DB.
-    const completedJob = await prisma.job.findFirst({ where: { title: "Landing page redesign" } });
+    // Demo completed job with a two-sided, fully-revealed review pair, so
+    // public profiles and the Job Success Score have data on a fresh DB.
+    // Referenced by its created id (createdJobs[1]), not a title lookup.
+    const completedJob = createdJobs[1]; // "Landing page redesign"
     if (completedJob) {
       const app = await prisma.application.upsert({
         where: { jobId_applicantId: { jobId: completedJob.id, applicantId: users[1].id } },
