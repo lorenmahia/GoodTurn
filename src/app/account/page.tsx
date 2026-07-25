@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db";
 import BalanceCard from "@/components/BalanceCard";
 import ComingSoon from "@/components/ComingSoon";
 import CompleteJobButton from "@/components/CompleteJobButton";
+import { getReputation } from "@/lib/reputation";
+import JobSuccessScore from "@/components/JobSuccessScore";
 
 export default async function AccountPage() {
   const session = await auth();
@@ -27,6 +29,7 @@ export default async function AccountPage() {
     },
     orderBy: { createdAt: "desc" },
   });
+  const reputation = await getReputation(user.id);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
@@ -111,6 +114,51 @@ export default async function AccountPage() {
             ))}
           </ul>
         )}
+      </section>
+
+      <section id="my-reputation" className="mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xl font-bold">My Reputation</h2>
+          <a
+            href="/api/reputation/export"
+            download
+            className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700"
+          >
+            Download my reputation
+          </a>
+        </div>
+        <p className="mt-2 text-sm text-neutral-500">
+          Your record travels with you. Download a copy any time — it&apos;s yours to keep.
+        </p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          {reputation.asFreelancer.count > 0 && (
+            <div>
+              <h3 className="mb-1 text-sm font-semibold">As a freelancer</h3>
+              <JobSuccessScore
+                direction={reputation.asFreelancer.direction}
+                score={reputation.asFreelancer.score}
+                count={reputation.asFreelancer.count}
+                breakdown={reputation.asFreelancer.breakdown}
+              />
+            </div>
+          )}
+          {reputation.asClient.count > 0 && (
+            <div>
+              <h3 className="mb-1 text-sm font-semibold">As a client</h3>
+              <JobSuccessScore
+                direction={reputation.asClient.direction}
+                score={reputation.asClient.score}
+                count={reputation.asClient.count}
+                breakdown={reputation.asClient.breakdown}
+              />
+            </div>
+          )}
+          {reputation.asFreelancer.count === 0 && reputation.asClient.count === 0 && (
+            <p className="text-sm text-neutral-500">
+              No reviews yet — complete a job to start building your score.
+            </p>
+          )}
+        </div>
       </section>
 
       <p className="mt-10">
