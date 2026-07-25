@@ -7,6 +7,8 @@ import ApplicantActions from "@/components/ApplicantActions";
 import EmployerBadge from "@/components/EmployerBadge";
 import GuaranteeBanner from "@/components/GuaranteeBanner";
 import ReportJobButton from "@/components/ReportJobButton";
+import Link from "next/link";
+import { getReputation } from "@/lib/reputation";
 
 export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -47,6 +49,10 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         orderBy: { createdAt: "desc" },
       })
     : [];
+
+  const applicantReps = await Promise.all(
+    applications.map((a) => getReputation(a.applicantId))
+  );
 
   const priceLabel =
     job.paymentType === "HOURLY" && job.hourlyRate
@@ -123,14 +129,21 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             </p>
           )}
           <ul className="mt-4 space-y-4">
-            {applications.map((a) => (
+            {applications.map((a, i) => (
               <li key={a.id} className="rounded-2xl border border-neutral-200 p-5 dark:border-neutral-800 dark:bg-white/5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="font-semibold">{a.applicantName || a.applicant.displayName}</p>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       {a.applicantLocation && <>{a.applicantLocation} · </>}
-                      {a.applicant.publicUserId} · {formatKESRate(a.applicant.hourlyRate)} ·{" "}
+                      <Link href={`/u/${a.applicant.publicUserId}`} className="text-brand hover:underline dark:text-accent">
+                        {a.applicant.publicUserId}
+                      </Link>
+                      {applicantReps[i].asFreelancer.score !== null && (
+                        <> · ★ {applicantReps[i].asFreelancer.score!.toFixed(1)} ({applicantReps[i].asFreelancer.count})</>
+                      )}
+                      {" · "}
+                      {formatKESRate(a.applicant.hourlyRate)} ·{" "}
                       {a.applicant.skills || "no skills listed"}
                     </p>
                   </div>
