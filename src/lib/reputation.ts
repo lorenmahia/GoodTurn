@@ -44,6 +44,13 @@ export async function getReputation(userId: string): Promise<Reputation> {
 
   // A connection holds at most two reviews (one per author, @@unique), so a
   // review count of 2 means the counterpart exists.
+  //
+  // Reveal invariant: this filter relies on `connection.closedAt` being set
+  // whenever a job is COMPLETED. Today that is guaranteed — the ONLY code path
+  // that closes a connection is the completion transaction in
+  // src/app/api/jobs/[id]/route.ts, which sets status + closedAt atomically.
+  // Any future path that closes a connection (e.g. an admin dispute flow) MUST
+  // set closedAt too, or the 14-day auto-reveal window becomes undefined here.
   const revealed = rows.filter((r) =>
     isRevealed({
       counterpartExists: r.connection._count.reviews >= 2,
