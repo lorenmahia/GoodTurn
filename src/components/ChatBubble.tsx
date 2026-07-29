@@ -9,21 +9,21 @@ export default function ChatBubble() {
     <div className="fixed bottom-5 right-5 z-50">
       {open && (
         <div className="mb-3 w-72 rounded-xl border border-neutral-200 bg-white p-4 shadow-xl dark:border-neutral-800 dark:bg-charcoal">
-          <h3 className="font-semibold text-brand dark:text-accent">Goodturn Connect</h3>
+          <h3 className="font-semibold text-brand dark:text-accent">Talk to Goodturn</h3>
           <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
-            Your job conversations live here. A thread opens when you accept an applicant or are accepted for a job.
+            Tell us the outcome you need and we&apos;ll scope it with you — price, turnaround and a delivery guarantee.
           </p>
           <Link
-            href="/connect"
+            href="/contact"
             className="mt-3 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition hover:bg-accent"
           >
-            Open Connect
+            Book a call
           </Link>
         </div>
       )}
       <button
         onClick={() => setOpen(!open)}
-        aria-label="Open Goodturn Connect chat"
+        aria-label="Talk to Goodturn"
         className="flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-lg transition hover:bg-accent"
       >
         <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">

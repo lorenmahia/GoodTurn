@@ -42,8 +42,11 @@ export default function ContactPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
-      <h1 className="text-3xl font-bold text-brand">Contact us</h1>
-      <p className="mt-1 text-sm text-neutral-600">Questions about Goodturn? Send us a message.</p>
+      <h1 className="text-3xl font-bold text-brand">Talk to us</h1>
+      <p className="mt-1 text-sm text-neutral-600">
+        Tell us the outcome you need and we&apos;ll scope the work with you — price, turnaround and a
+        delivery guarantee. Or ask us anything about how Goodturn works.
+      </p>
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         <div>
           <label className="mb-1 block text-sm font-medium">Name</label>

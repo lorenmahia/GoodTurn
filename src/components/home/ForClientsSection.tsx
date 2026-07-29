@@ -8,29 +8,29 @@ export default function ForClientsSection() {
       <div className="mx-auto max-w-6xl px-4">
         <Reveal variant="fade-up">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-            For clients
+            For businesses
           </p>
           <h2 className="mt-4 max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl">
-            The work gets done properly, or it doesn&apos;t get marked done
+            You describe the outcome. We deliver it — and stand behind it.
           </h2>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-600">
-            Goodturn Jobs is built around one idea: you should be able to describe
-            what you need, name a fair price, and get applicants who are actually
-            equipped to deliver it.
+            Goodturn is a managed delivery service, not a marketplace of CVs. You get
+            a finished result, one accountable delivery lead, and a named team you can
+            see — without hiring, onboarding, or line-managing anyone.
           </p>
         </Reveal>
 
         <div className="mt-20 grid items-center gap-12 md:grid-cols-2">
           <Reveal variant="left">
             <h3 className="text-2xl font-bold text-brand">
-              A large, high-quality freelancer skillset
+              A vetted team, run for you
             </h3>
             <p className="mt-4 leading-relaxed text-neutral-700">
-              Our freelancers cover a wide variety of skillsets, enough to make
-              almost any work that can be done online possible. We also provide
-              in-app specialists who support freelancers as they work, which lifts
-              the quality of what you get back. Our learn-with-us programme keeps
-              freelancers ready for whatever your job description asks of them.
+              We assemble and manage a team matched to your work — data operations,
+              catalogue and content, support, annotation, East-African language work
+              and more. A delivery lead owns the outcome, batches your questions, and
+              is your single point of contact. Our people are trained to your spec
+              through Goodturn Learn, so they are productive from day one.
             </p>
           </Reveal>
 
@@ -62,42 +62,40 @@ export default function ForClientsSection() {
 
           <Reveal variant="right">
             <h3 className="text-2xl font-bold text-brand">
-              Matched by AI, ranked by certification
+              Quality you can audit
             </h3>
             <p className="mt-4 leading-relaxed text-neutral-700">
-              Our platform screens freelancers on their educational background and
-              skill set, then matches them against your job posting through our
-              artificial intelligence system so you get the best match possible.
-              Freelancers are encouraged to keep learning and earning new
-              certificates, and every certificate they earn boosts their ranking
-              against jobs like yours.
+              Every submission is reviewed against your brief before it reaches you,
+              with a reason-coded quality record you can see. You get a live view of
+              who did what, a daily digest, and a monthly review where the numbers —
+              defect rate, turnaround, throughput — are on the table. Nothing is
+              marked done until it is done properly.
             </p>
           </Reveal>
         </div>
 
         <Reveal variant="tilt" className="mt-24">
           <div className="rounded-2xl bg-ink p-10 text-white shadow-2xl shadow-ink/30 sm:p-14">
-            <h3 className="text-3xl font-bold">You set the price</h3>
+            <h3 className="text-3xl font-bold">One invoice, zero exposure</h3>
             <p className="mt-4 max-w-3xl leading-relaxed text-neutral-300">
-              You are responsible for setting your own price for the job. For each
-              category there is a minimum, worked out from the number of hours you
-              estimate and the complexity of the job. That minimum is not a fee we
-              take. It exists so the posting is worth a good freelancer&apos;s time,
-              which is the difference between a job that attracts applicants and one
-              that sits untouched.
+              Start with a fixed-scope, fixed-price service and know exactly what you
+              are getting, by when, at what quality. We handle the delivery, the
+              compliance — eTIMS, withholding tax, one clean invoice — and the fair,
+              verified pay to the people doing the work. If we miss the standard we
+              agreed, that is on us, not you.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
-                href="/post-a-job"
+                href="/services"
                 className="rounded-lg bg-brand px-8 py-4 font-semibold tracking-wide transition hover:bg-accent"
               >
-                Post a Job
+                See our services
               </Link>
               <Link
                 href="/how-it-works"
                 className="rounded-lg border border-white/40 px-8 py-4 font-medium tracking-wide transition hover:border-white hover:bg-white/10"
               >
-                How it Works
+                How it works
               </Link>
             </div>
           </div>

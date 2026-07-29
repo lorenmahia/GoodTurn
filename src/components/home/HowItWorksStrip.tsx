@@ -4,18 +4,18 @@ import Reveal from "@/components/motion/Reveal";
 const STEPS = [
   {
     n: "01",
-    title: "Post a job and enter details",
-    body: "Describe the work, pick a category, estimate the hours, set your price. We show you the category minimum as you type.",
+    title: "Brief us",
+    body: "Tell us the outcome you need. Your delivery lead turns it into a complete brief — worked examples, edge cases, and a clear definition of done.",
   },
   {
     n: "02",
-    title: "Receive applications",
-    body: "Applicants arrive ranked by match. Filter them, wishlist the promising ones, and deny the rest without a conversation.",
+    title: "We deliver",
+    body: "A vetted, fairly-paid team does the work. Every piece is reviewed against the brief, with a reason-coded quality record, before it reaches you.",
   },
   {
     n: "03",
-    title: "Accept, and work begins",
-    body: "Accept a freelancer and the job moves to in progress. You are both logged in to Goodturn Connect to work together.",
+    title: "You get finished work, guaranteed",
+    body: "Approved work, on time, with a quality record you can audit and a guarantee we contractually stand behind. If we miss the standard, that is on us.",
   },
 ];
 
@@ -25,7 +25,7 @@ export default function HowItWorksStrip() {
       <div className="mx-auto max-w-6xl px-4">
         <Reveal variant="fade-up">
           <h2 className="text-3xl font-extrabold sm:text-4xl">
-            Three steps from posting to progress
+            Three steps from brief to delivered
           </h2>
         </Reveal>
 
@@ -46,7 +46,7 @@ export default function HowItWorksStrip() {
             href="/how-it-works"
             className="font-semibold text-brand underline-offset-4 hover:text-accent hover:underline"
           >
-            See the full workflow, including payment and completion →
+            See the full workflow, including quality checks and dispute resolution →
           </Link>
         </Reveal>
       </div>

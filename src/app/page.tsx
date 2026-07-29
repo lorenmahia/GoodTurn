@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/db";
 import HeroSection from "@/components/home/HeroSection";
 import StatsBand from "@/components/home/StatsBand";
 import ForClientsSection from "@/components/home/ForClientsSection";
@@ -10,17 +9,11 @@ import FinalCtaBand from "@/components/home/FinalCtaBand";
 
 export const revalidate = 3600;
 
-export default async function HomePage() {
-  const [openJobs, categories, members] = await Promise.all([
-    prisma.job.count({ where: { status: "OPEN" } }),
-    prisma.category.count(),
-    prisma.user.count(),
-  ]);
-
+export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <StatsBand openJobs={openJobs} categories={categories} members={members} />
+      <StatsBand />
       <ForClientsSection />
       <HowItWorksStrip />
       <ForFreelancersSection />

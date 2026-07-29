@@ -23,24 +23,25 @@ export default function FinalCtaBand() {
       <div className="relative mx-auto max-w-6xl px-4 py-32">
         <Reveal variant="fade-up">
           <h2 className="max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl">
-            Post your first job today
+            Start with a fixed-price service
           </h2>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-neutral-200">
-            Describe the work, set your price, and see who applies. It costs nothing
-            to find out what the right freelancer would do with it.
+            Pick a service with a clear scope, price and turnaround — or book a call
+            and we&apos;ll scope your work with you. Managed delivery, verified fair
+            pay, and a guarantee we stand behind.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              href="/post-a-job"
+              href="/services"
               className="rounded-lg bg-brand px-8 py-4 text-lg font-semibold tracking-wide shadow-lg shadow-ink/40 transition hover:bg-accent"
             >
-              Post a Job
+              See our services
             </Link>
             <Link
               href="/contact"
               className="rounded-lg border border-white/40 px-8 py-4 text-lg font-medium tracking-wide transition hover:border-white hover:bg-white/10"
             >
-              Contact us
+              Book a call
             </Link>
           </div>
         </Reveal>

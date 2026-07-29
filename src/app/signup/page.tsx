@@ -33,7 +33,7 @@ export default function SignupPage() {
       return;
     }
     await signIn("credentials", { email: form.email, password: form.password, redirect: false });
-    router.push("/find-work");
+    router.push("/account");
     router.refresh();
   }
 
@@ -41,8 +41,10 @@ export default function SignupPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
-      <h1 className="text-3xl font-bold text-brand">Create your account</h1>
-      <p className="mt-1 text-sm text-neutral-600">One account for finding work and posting jobs.</p>
+      <h1 className="text-3xl font-bold text-brand">Join our delivery teams</h1>
+      <p className="mt-1 text-sm text-neutral-600">
+        Create a free worker profile — training and real paid work with Goodturn.
+      </p>
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         <div>
           <label className="mb-1 block text-sm font-medium">Display name</label>

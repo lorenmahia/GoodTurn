@@ -3,28 +3,27 @@ import Logo from "./Logo";
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
-    heading: "Read and Learn",
+    heading: "What we do",
     links: [
-      { label: "Our User Guide", href: "/how-it-works" },
-      { label: "Reference Library", href: "/learn" },
-      { label: "News", href: "/learn" },
+      { label: "Our Services", href: "/services" },
+      { label: "How it works", href: "/how-it-works" },
+      { label: "Goodturn Learn", href: "/learn" },
     ],
   },
   {
-    heading: "Connect and Ask",
+    heading: "Trust & Fair Work",
     links: [
-      { label: "Goodturn Forum", href: "/learn" },
-      { label: "Trusted Agencies", href: "/learn" },
-      { label: "Trust & Safety", href: "/safety" },
-      { label: "FAQ's", href: "/how-it-works" },
+      { label: "Fair Work & Transparency", href: "/safety" },
+      { label: "Data protection", href: "/safety" },
+      { label: "Talk to us", href: "/contact" },
     ],
   },
   {
-    heading: "Bookmark and Follow",
+    heading: "Work with us",
     links: [
+      { label: "Join our delivery teams", href: "/signup" },
       { label: "Instagram", href: "https://instagram.com" },
       { label: "Twitter", href: "https://twitter.com" },
-      { label: "Blog", href: "/learn" },
     ],
   },
 ];
@@ -59,7 +58,7 @@ export default function Footer() {
           <span>Copyright Goodturn {new Date().getFullYear()}</span>
           <Link href="/" className="hover:text-white">About the Company</Link>
           <Link href="/how-it-works" className="hover:text-white">Terms and conditions</Link>
-          <Link href="/contact" className="hover:text-white">Reset password</Link>
+          <Link href="/contact" className="hover:text-white">Contact us</Link>
         </div>
       </div>
     </footer>

@@ -26,7 +26,7 @@ function LoginForm() {
       setError("Invalid email or password.");
     } else {
       const raw = params.get("callbackUrl");
-      const callbackUrl = raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/find-work";
+      const callbackUrl = raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/account";
       router.push(callbackUrl);
       router.refresh();
     }

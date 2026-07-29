@@ -10,27 +10,26 @@ export default function ConnectSection() {
             <Reveal variant="fade-up">
               <h2 className="text-4xl font-extrabold sm:text-5xl">Goodturn Connect</h2>
               <h3 className="mt-4 text-xl font-bold text-brand">
-                Connect with users anywhere through video, call, chat and SMS
+                Where the work happens — and gets proven
               </h3>
               <p className="mt-4 leading-relaxed text-neutral-700">
-                You are going to apply for jobs all over the world. You should still
-                feel connected to your customers as though you were in the room with
-                them. Goodturn Connect gives you team management and direct messaging
-                so nothing gets lost between kickoff and completion.
+                Connect is your delivery record, not a chat app. Every brief,
+                submission and review sits in one place, with reason-coded quality
+                decisions and an audit trail you can rely on. You always know who did
+                what, when, and to what standard.
               </p>
             </Reveal>
 
             <Reveal variant="fade-up" delay={120}>
               <p className="mt-6 font-semibold leading-relaxed text-brand">
-                Please note: you will be automatically logged in to Goodturn Connect
-                when you post a job or are accepted for a job. Use your Account ID to
-                sign up to the Goodturn Connect platform. Your ID can be found on the
-                Accounts page.
+                You get one accountable delivery lead, a live dashboard, a daily
+                digest of progress, and a monthly business review where the numbers
+                are on the table — no line-management, no chasing.
               </p>
               <div className="mt-8">
                 <ComingSoon
-                  label="Go to Connect"
-                  note="Goodturn Connect is coming soon — stay tuned!"
+                  label="See a sample delivery report"
+                  note="The Goodturn Connect delivery portal is rolling out to clients — talk to us for a walkthrough."
                 />
               </div>
             </Reveal>
@@ -39,11 +38,12 @@ export default function ConnectSection() {
           <Reveal variant="tilt">
             <div className="rounded-2xl bg-gradient-to-br from-brand via-[#2a3568] to-ink p-10 text-white shadow-2xl shadow-ink/20">
               <p className="text-lg font-semibold">
-                Team management, direct messaging, file sharing and in-app APIs
+                Structured briefs, submissions, reason-coded reviews and an audit
+                trail
               </p>
               <p className="mt-3 leading-relaxed text-neutral-300">
-                The Goodturn Connect Workstation keeps you and your clients on the
-                same page from kickoff to completion.
+                Connect turns delivery into evidence: every decision is logged and
+                explainable, so quality is something you can see — and we can prove.
               </p>
             </div>
           </Reveal>

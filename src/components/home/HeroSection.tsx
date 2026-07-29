@@ -43,39 +43,39 @@ export default function HeroSection() {
         <div className="mx-auto w-full max-w-6xl px-4">
           <Reveal variant="fade-up">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              Goodturn Jobs
+              Managed remote teams from Kenya
             </p>
           </Reveal>
 
           <Reveal variant="fade-up" delay={90}>
             <h1 className="mt-6 max-w-4xl text-4xl font-extrabold leading-tight sm:text-6xl lg:text-7xl">
-              Hire vetted freelance talent for work that matters
+              Outcomes delivered, guaranteed — not hours sold
             </h1>
           </Reveal>
 
           <Reveal variant="fade-up" delay={180}>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-neutral-200">
-              Post a job, set your own price, and let our matching system put it in
-              front of freelancers screened on skills and certifications. Goodturn
-              Jobs is one of three connected businesses, alongside Goodturn Connect
-              for working together and Goodturn Learn for building the skills that
-              get the work done.
+              Managed remote teams from Kenya, with EU-standard data protection,
+              verified fair pay, and a delivery guarantee we contractually stand
+              behind. You brief us and get finished work back — one accountable
+              delivery lead, a named team you can see, and a quality record you can
+              audit. No CVs to sift, no one to line-manage.
             </p>
           </Reveal>
 
           <Reveal variant="fade-up" delay={270}>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
-                href="/post-a-job"
+                href="/services"
                 className="rounded-lg bg-brand px-8 py-4 text-lg font-semibold tracking-wide shadow-lg shadow-ink/40 transition hover:bg-accent"
               >
-                Post a Job
+                See our services
               </Link>
               <Link
-                href="/find-work"
+                href="/contact"
                 className="rounded-lg border border-white/40 px-8 py-4 text-lg font-medium tracking-wide transition hover:border-white hover:bg-white/10"
               >
-                Find Work
+                Book a call
               </Link>
             </div>
           </Reveal>

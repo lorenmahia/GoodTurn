@@ -7,11 +7,11 @@ import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
 
 const LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/find-work", label: "Find Work" },
-  { href: "/post-a-job", label: "Post a Job" },
+  { href: "/services", label: "Services" },
+  { href: "/how-it-works", label: "How it works" },
   { href: "/learn", label: "Learn" },
-  { href: "/account", label: "Account" },
+  { href: "/safety", label: "Fair Work" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar({ userName }: { userName: string | null }) {
@@ -28,8 +28,14 @@ export default function Navbar({ userName }: { userName: string | null }) {
       </button>
     </>
   ) : (
-    <Link href="/login" className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-white transition hover:opacity-90">
-      Sign up/Log in
+    <Link href="/login" className="text-sm text-neutral-300 hover:text-white dark:text-neutral-400 dark:hover:text-white">
+      Client login
+    </Link>
+  );
+
+  const bookCall = (
+    <Link href="/contact" className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-white transition hover:opacity-90">
+      Book a call
     </Link>
   );
 
@@ -47,7 +53,7 @@ export default function Navbar({ userName }: { userName: string | null }) {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-4 md:flex"><ThemeToggle />{authControls}</div>
+        <div className="hidden items-center gap-4 md:flex"><ThemeToggle />{authControls}{bookCall}</div>
         <button aria-label="Menu" onClick={() => setOpen(!open)} className="p-1 md:hidden">
           <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
@@ -62,7 +68,7 @@ export default function Navbar({ userName }: { userName: string | null }) {
               {l.label}
             </Link>
           ))}
-          <div className="flex items-center gap-3 px-2 pt-2">{authControls}</div>
+          <div className="flex items-center gap-3 px-2 pt-2">{authControls}{bookCall}</div>
         </nav>
       )}
     </header>

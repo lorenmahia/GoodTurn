@@ -6,9 +6,9 @@ import ChatBubble from "@/components/ChatBubble";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Goodturn — Freelancers, Businesses and Industry Experts",
+  title: "Goodturn — Managed Remote Teams from Kenya",
   description:
-    "Goodturn connects freelancers, businesses and industry experts through Goodturn Jobs, Goodturn Connect and Goodturn Learn.",
+    "Managed remote teams from Kenya — with EU-standard data protection, verified fair pay, and a delivery guarantee we contractually stand behind. We deliver outcomes, not hours.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

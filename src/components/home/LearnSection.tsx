@@ -11,32 +11,30 @@ export default function LearnSection() {
             <Reveal variant="left">
               <h2 className="text-4xl font-extrabold sm:text-5xl">Goodturn Learn</h2>
               <p className="mt-4 max-w-xl text-lg text-neutral-200">
-                A world-class learning system built for every level of knowledge,
-                from beginners to industry experts.
+                The training arm of a work platform — the skills the work actually
+                needs, with real paid work at the end of it.
               </p>
             </Reveal>
 
             <Reveal variant="left" delay={120}>
               <div className="mt-10">
-                <h3 className="text-xl font-semibold">Want to learn …</h3>
+                <h3 className="text-xl font-semibold">For businesses</h3>
                 <p className="mt-3 leading-relaxed text-neutral-200">
-                  Browse over 100 categories of certificates offered through
-                  LinkedIn, Google Certificates, universities and our own expert
-                  material. Each certificate earned gets you closer to better paying
-                  jobs.
+                  We train a team to your exact spec, so they are productive on day
+                  one. If you employ staff in Kenya, we can help you put your NITA
+                  training levy — money you already pay — toward it, so your net cost
+                  can be close to nothing.
                 </p>
               </div>
             </Reveal>
 
             <Reveal variant="left" delay={210}>
               <div className="mt-8">
-                <h3 className="text-xl font-semibold">Already an expert …</h3>
+                <h3 className="text-xl font-semibold">For workers</h3>
                 <p className="mt-3 leading-relaxed text-neutral-200">
-                  Get paid to teach freelancers on the topic of your expertise across
-                  20 topic categories and hundreds of subcategories. You choose the
-                  amount and rate you are paid, post your experience and designs to
-                  your board, and chat with potential customers through Goodturn
-                  Connect.
+                  Free, mobile-first training that leads to real paid work with us —
+                  not a certificate that goes nowhere. Prove you can do a specific
+                  job, then get assigned to a delivery team.
                 </p>
               </div>
             </Reveal>

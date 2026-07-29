@@ -22,42 +22,42 @@ export default function ForFreelancersSection() {
           <div>
             <Reveal variant="right">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                For freelancers
+                Work with us
               </p>
               <h2 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">
-                Work you&apos;re actually suited to, paid the way you want
+                Real work, fairly paid, with training that pays off
               </h2>
             </Reveal>
 
             <Reveal variant="right" delay={90}>
               <div className="mt-10">
-                <h3 className="text-xl font-bold text-brand">Find your best match</h3>
+                <h3 className="text-xl font-bold text-brand">Real paid work</h3>
                 <p className="mt-3 leading-relaxed text-neutral-700">
-                  Search the board yourself, or hit Find Best Match and let us rank
-                  every open job against the skills on your profile. The better your
-                  profile, the better the ranking.
+                  We bring in the clients and the briefs; you do the work. No bidding,
+                  no paying to apply — you join a delivery team and get assigned real,
+                  paid tasks that fit your skills.
                 </p>
               </div>
             </Reveal>
 
             <Reveal variant="right" delay={180}>
               <div className="mt-8">
-                <h3 className="text-xl font-bold text-brand">A fast payment system</h3>
+                <h3 className="text-xl font-bold text-brand">Fair pay, on time</h3>
                 <p className="mt-3 leading-relaxed text-neutral-700">
-                  We accept Visa, Mastercard, PayPal, Mpesa and all crypto wallets,
-                  so your mode of payment is available globally. Our secure checkout
-                  system guarantees your money&apos;s safety.
+                  We publish a fair-pay floor that sits above the market median, and
+                  we pay it — verifiably, on schedule. What you earn is reported in
+                  our public Transparency Report, not hidden.
                 </p>
               </div>
             </Reveal>
 
             <Reveal variant="right" delay={270}>
               <div className="mt-8">
-                <h3 className="text-xl font-bold text-brand">Grow into better work</h3>
+                <h3 className="text-xl font-bold text-brand">Training that leads to work</h3>
                 <p className="mt-3 leading-relaxed text-neutral-700">
-                  Every certificate you earn through Goodturn Learn lifts your
-                  ranking against the jobs you want. Learning is how you move up the
-                  list, not just how you fill time between contracts.
+                  Goodturn Learn trains you to the exact standard our clients need —
+                  and the work is waiting at the end of it, from us. Build a verified
+                  track record and move into higher-value teams.
                 </p>
               </div>
             </Reveal>
@@ -65,16 +65,16 @@ export default function ForFreelancersSection() {
             <Reveal variant="fade-up" delay={360}>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
-                  href="/find-work"
+                  href="/signup"
                   className="rounded-lg bg-ink px-8 py-4 font-semibold tracking-wide text-white transition hover:bg-neutral-700"
                 >
-                  Find Work
+                  Join our teams
                 </Link>
                 <Link
-                  href="/how-it-works"
+                  href="/learn"
                   className="rounded-lg bg-accent px-8 py-4 font-medium tracking-wide text-white transition hover:opacity-90"
                 >
-                  How it Works
+                  About Goodturn Learn
                 </Link>
               </div>
             </Reveal>
